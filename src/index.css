@@ -1,0 +1,95 @@
+/**
+ * Global CSS styles applied to the entire app
+ */
+
+html,
+body,
+.container-fluid,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 100;
+  font-size: 1rem;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* Site Colours */
+.primary-color {
+  color: rgb(255, 69, 0);
+}
+
+/* Text Elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Inria Serif", serif;
+}
+
+/* Buttons */
+button.clear {
+  background: none;
+  border: none;
+}
+button[type="button"]:focus {
+  outline: none;
+}
+button[type="button"]:hover {
+  cursor: pointer;
+}
+
+/* Inputs */
+input.form-control[type="checkbox"] {
+  height: 15px;
+}
+input.form-control[type="checkbox"]:focus {
+  border: none;
+  box-shadow: none;
+}
+
+/* Anchors */
+a {
+  color: rgb(255, 69, 0);
+}
+a:hover {
+  text-decoration: none;
+  color: rgb(255, 125, 0);
+}
+/* Global Styles */
+
+strong,
+b {
+  font-weight: 700;
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 5768px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}
+
+/* External Monitors */
+@media (min-width: 1500px) {
+  html {
+    font-size: 1.2rem;
+  }
+}

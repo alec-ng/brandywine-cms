@@ -1,0 +1,30 @@
+.text-overlay {
+  font-size: 1rem;
+}
+
+@media (min-width: 576px) {
+  .text-overlay {
+    font-size: 1.2rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .text-overlay {
+    font-size: 1.6rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .text-overlay {
+    font-size: 1.8rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .text-overlay {
+    font-size: 2rem;
+  }
+}

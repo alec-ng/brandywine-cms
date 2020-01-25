@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "default": "alecng-site"
+  },
+  "targets": {
+    "alec-ng-sandbox": {
+      "hosting": {
+        "sbx-cms": [
+          "alecng-cms-sandbox"
+        ]
+      }
+    },
+    "alecng-site": {
+      "hosting": {
+        "cms": [
+          "alecng-cms"
+        ]
+      }
+    }
+  }
+}
