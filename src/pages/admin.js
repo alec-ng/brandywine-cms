@@ -11,13 +11,12 @@ import {
   updatePost
 } from "../util/firebase-post-util";
 
-import Image from "../components/scrapbook-editor/plugins/image";
-import Markdown from "../components/scrapbook-editor/plugins/markdown";
-import CoverPhoto from "../components/scrapbook-editor/plugins/cover-photo";
-import Spacer from "../components/scrapbook-editor/plugins/spacer";
-import Carousel from "../components/scrapbook-editor/plugins/carousel";
-import EmbeddedVideo from '../components/scrapbook-editor/plugins/embedded-video';
-import HTMLVideo from '../components/scrapbook-editor/plugins/html-video';
+import Image from "../components/scrapbook-editor/plugins/image/index";
+import Markdown from "../components/scrapbook-editor/plugins/markdown/index";
+import CoverPhoto from "../components/scrapbook-editor/plugins/cover-photo/index";
+import Spacer from "../components/scrapbook-editor/plugins/spacer/index";
+import Carousel from "../components/scrapbook-editor/plugins/carousel/index";
+import Video from "../components/scrapbook-editor/plugins/video/index";
 
 const Admin = function(props) {
   const [loading, setLoading] = useState(true);
@@ -81,8 +80,8 @@ const Admin = function(props) {
                 onAction={onCMSAction}
                 data={cmsPostData}
                 plugins={plugins}
-                postGroup={postGroup}
                 showPluginDescription={false}
+                postGroup={postGroup}
               />
             </div>
           )}
@@ -96,12 +95,4 @@ const condition = authUser =>
   authUser && authUser.email === process.env.REACT_APP_ADMIN_EMAIL;
 export default withAuthorization(condition)(Admin);
 
-const plugins = [
-  Image, 
-  Markdown, 
-  CoverPhoto, 
-  Spacer, 
-  Carousel, 
-  EmbeddedVideo,
-   HTMLVideo
-];
+const plugins = [Image, Markdown, CoverPhoto, Spacer, Carousel, Video];
