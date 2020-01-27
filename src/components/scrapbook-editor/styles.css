@@ -16,8 +16,8 @@ Row {
 }
 
 .brandywine-responsive-x-padding {
-  padding-right: 10%;
-  padding-left: 10%;
+  padding-right: 5%;
+  padding-left: 5%;
 }
 
 @media (min-width: 576px) {
@@ -52,10 +52,10 @@ Row {
   .brandywine-width_small {
     width: 40%;
   }
-
+  
   .brandywine-responsive-x-padding {
-    padding-right: 5%;
-    padding-left: 5%;
+    padding-right: 0;
+    padding-left: 0;
   }
 }
 
@@ -69,10 +69,5 @@ Row {
   }
   .brandywine-width_small {
     width: 30%;
-  }
-
-  .brandywine-responsive-x-padding {
-    padding-right: 0;
-    padding-left: 0;
   }
 }

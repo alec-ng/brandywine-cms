@@ -10,24 +10,20 @@ export function ImageElement(props) {
   let urlSource = props.baseAttrs.urlSource || PlaceholderImgURL;
 
   return (
-    <React.Fragment>
+    <div className={`${sizeClassName} mx-auto text-center brandywine-responsive-x-padding`}>
       <img
         alt=""
         src={urlSource}
-        className={`${sizeClassName} img-fluid d-block mx-auto`}
-      />
-      {(props.baseAttrs.primaryText || props.baseAttrs.secondaryText) && (
-        <div className={`${sizeClassName} text-center mx-auto`}>
-          {props.baseAttrs.primaryText && (
-            <h6 className="mt-2 mb-0">{props.baseAttrs.primaryText}</h6>
-          )}
-          {props.baseAttrs.secondaryText && (
-            <small className="text-muted text-center">
-              {props.baseAttrs.secondaryText}
-            </small>
-          )}
-        </div>
+        className="img-fluid d-block"
+      />  
+      {props.baseAttrs.primaryText && (
+        <h6 className="mt-2 mx-3 mb-0">{props.baseAttrs.primaryText}</h6>
       )}
-    </React.Fragment>
+      {props.baseAttrs.secondaryText && (
+        <small className="mx-3 text-muted text-center">
+          {props.baseAttrs.secondaryText}
+        </small>
+      )}
+    </div>
   );
 }

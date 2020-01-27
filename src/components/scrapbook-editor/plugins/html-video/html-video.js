@@ -5,8 +5,11 @@ import './style.css';
 
 export const VARIATION_DEFAULT = 'html-video-default';
 export const AlignmentContainer = function(props) {
+  let responsivePadding = props.sizeClassName !== 'brandywine-width_stretch' 
+    ? 'brandywine-responsive-x-padding' : '';
+
   return (
-    <div className={props.sizeClassName} style={{ margin: "0 auto" }}>
+    <div className={`${props.sizeClassName} ${responsivePadding} mx-auto`}>
       {props.children}
     </div>
   );
