@@ -7,7 +7,7 @@ execSync('firebase use alecng-site', {stdio: 'inherit'});
 
 console.log('\n>> Rewriting env var to production...');
 console.log('-------------------------------------------------------\n');
-let envFile = fs.readFileSync('.env', 'utf-8');
+let envFile = fs.readFileSync(`${__dirname}/../.env`, 'utf-8');
 let topVariable = envFile.split('\n')[0];
 const [envVar] = topVariable.split('=');
 if (envVar !== 'REACT_APP_ENV') {
@@ -17,7 +17,7 @@ if (envVar !== 'REACT_APP_ENV') {
 let prodEnv = `${envVar}=production`;
 let variables = envFile.split('\n');
 variables[0] = prodEnv;
-fs.writeFileSync('.env', variables.join('\n'));
+fs.writeFileSync(`${__dirname}/../.env`, variables.join('\n'));
 
 console.log('\n>> Building...');
 console.log('-------------------------------------------------------\n');
@@ -33,4 +33,4 @@ console.log('-------------------------------------------------------\n');
 let sandboxEnv = `${envVar}=sandbox`;
 variables = envFile.split('\n');
 variables[0] = sandboxEnv;
-fs.writeFileSync('.env', variables.join('\n'));
+fs.writeFileSync(`${__dirname}/../.env`, variables.join('\n'));

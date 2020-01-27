@@ -7,7 +7,7 @@ execSync('firebase use alec-ng-sandbox', {stdio: 'inherit'});
 
 console.log('\n>> Ensuring env var is set to sandbox...');
 console.log('-------------------------------------------------------\n');
-let envFile = fs.readFileSync('.env', 'utf-8');
+let envFile = fs.readFileSync(`${__dirname}/../.env`, 'utf-8');
 let topVariable = envFile.split('\n')[0];
 const [envVar, value] = topVariable.split('=');
 if (envVar !== 'REACT_APP_ENV') {
@@ -19,7 +19,7 @@ if (value !== 'sandbox') {
   topVariable = `${envVar}=sandbox`;
   let variables = envFile.split('\n');
   variables[0] = topVariable;
-  fs.writeFileSync('.env', variables.join('\n'));
+  fs.writeFileSync(`${__dirname}/../.env`, variables.join('\n'));
 }
 
 console.log('\n>> Building...');

@@ -36,8 +36,8 @@
     }
   },
   "scripts": {
-    "deployToStaging": "node ./deploySbx",
-    "deployToProduction": "node ./deployProd",
+    "deployToStaging": "node ./scripts/deploySbx",
+    "deployToProduction": "node ./scripts/deployProd",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
