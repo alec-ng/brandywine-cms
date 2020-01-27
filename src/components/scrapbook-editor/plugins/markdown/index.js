@@ -7,7 +7,6 @@ const Image = {
   name: "markdown",
   label: "Markdown",
   description: "Parses and renders a markdown source",
-  icon: null,
   canvasElement: MarkdownElement,
   baseAttrs: [
     {

@@ -46,7 +46,6 @@ const Spacer = {
     }
   ],
   defaultVariation: VARIATION_DEFAULT,
-  useDefaultControls: true
 };
 export default Spacer;
 

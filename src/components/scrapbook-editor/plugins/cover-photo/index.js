@@ -11,7 +11,6 @@ const CoverPhoto = {
   name: "coverPhoto",
   label: "Cover Photo",
   description: "Full width image rendered from a URL source",
-  icon: null,
   canvasElement: CoverPhotoElement,
   baseAttrs: [
     {
@@ -98,7 +97,6 @@ const CoverPhoto = {
     }
   ],
   defaultVariation: VARIATION_DEFAULT,
-  useDefaultControls: true
 };
 
 export default CoverPhoto;

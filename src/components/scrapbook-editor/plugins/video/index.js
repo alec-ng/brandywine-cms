@@ -5,7 +5,6 @@ const Video = {
   name: "video",
   label: "Video",
   description: "Renders an embedded or source video",
-  icon: null,
   canvasElement: VideoElement,
   baseAttrs: [
     {
@@ -70,7 +69,6 @@ const Video = {
     }
   ],
   defaultVariation: VARIATION_DEFAULT,
-  useDefaultControls: true
 };
 
 export default Video;
