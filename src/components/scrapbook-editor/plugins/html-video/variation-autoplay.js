@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import VisibilitySensor from "react-visibility-sensor";
 import { HTMLVideo, VideoContainer, AlignmentContainer } from "./html-video";
 
@@ -9,25 +9,26 @@ const OverlayContainer = styled.div`
   position: absolute;
   margin: 10px;
   color: #ffffff;
-  top: ${props => props.top && props.top !== "0" ? props.top + "%" : "auto"};
-  right: ${props => props.right && props.right !== "0" ? props.right + "%" : "auto"};
-  bottom: ${props => props.bottom && props.bottom !== "0" ? props.bottom + "%" : "auto"};
-  left: ${props => props.left && props.left !== "0" ? props.left + "%" : "auto"};
+  top: ${props => (props.top && props.top !== "0" ? props.top + "%" : "auto")};
+  right: ${props =>
+    props.right && props.right !== "0" ? props.right + "%" : "auto"};
+  bottom: ${props =>
+    props.bottom && props.bottom !== "0" ? props.bottom + "%" : "auto"};
+  left: ${props =>
+    props.left && props.left !== "0" ? props.left + "%" : "auto"};
 `;
 
 export function AutoplayElement(props) {
-  const [DOMLoaded, setDOMLoaded] = useState(false);
-  useEffect(() => {
-    setDOMLoaded(true);
-  }, []);
-
-  const alignmentClass = props.variationAttrs.align 
-    ? `text-${props.variationAttrs.align}` : '';
+  const alignmentClass = props.variationAttrs.align
+    ? `text-${props.variationAttrs.align}`
+    : "";
   const offsetDefined =
     (props.variationAttrs.top && props.variationAttrs.top !== "0") ||
-    (props.variationAttrs.right && props.variationAttrs.right !== "0") !== "0" ||
-    (props.variationAttrs.bottom && props.variationAttrs.bottom !== "0")
-    (props.variationAttrs.left && props.variationAttrs.left !== "0");
+    (props.variationAttrs.right && props.variationAttrs.right !== "0") !==
+      "0" ||
+    (props.variationAttrs.bottom && props.variationAttrs.bottom !== "0")(
+      props.variationAttrs.left && props.variationAttrs.left !== "0"
+    );
 
   let vidRef = React.useRef();
   let attributes = {
@@ -37,13 +38,10 @@ export function AutoplayElement(props) {
 
   // For autoplay variation- if video is visible, play. If not, pause
   function onChange(isVisible) {
-    if (!DOMLoaded) {
-      return;
-    }
     let video = this.children.ref.current.getElementsByTagName("video")[0];
     if (isVisible) {
       video.play();
-    } else if (video) {
+    } else if (video.playing) {
       video.pause();
     }
   }
@@ -53,7 +51,10 @@ export function AutoplayElement(props) {
       <div ref={vidRef}>
         <AlignmentContainer sizeClassName={props.sizeClassName}>
           <VideoContainer>
-            <HTMLVideo urlSource={props.baseAttrs.urlSource} attributes={attributes} />
+            <HTMLVideo
+              urlSource={props.baseAttrs.urlSource}
+              attributes={attributes}
+            />
             {offsetDefined && (
               <OverlayContainer
                 top={props.variationAttrs.top}
