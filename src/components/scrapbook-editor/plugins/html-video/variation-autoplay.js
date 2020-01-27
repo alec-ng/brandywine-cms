@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import VisibilitySensor from "react-visibility-sensor";
 import { HTMLVideo, VideoContainer, AlignmentContainer } from "./html-video";
@@ -16,6 +16,11 @@ const OverlayContainer = styled.div`
 `;
 
 export function AutoplayElement(props) {
+  const [DOMLoaded, setDOMLoaded] = useState(false);
+  useEffect(() => {
+    setDOMLoaded(true);
+  }, []);
+
   const alignmentClass = props.variationAttrs.align 
     ? `text-${props.variationAttrs.align}` : '';
   const offsetDefined =
@@ -32,10 +37,13 @@ export function AutoplayElement(props) {
 
   // For autoplay variation- if video is visible, play. If not, pause
   function onChange(isVisible) {
+    if (!DOMLoaded) {
+      return;
+    }
     let video = this.children.ref.current.getElementsByTagName("video")[0];
     if (isVisible) {
       video.play();
-    } else {
+    } else if (video) {
       video.pause();
     }
   }
