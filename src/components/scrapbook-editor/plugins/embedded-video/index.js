@@ -1,7 +1,7 @@
 import React from 'react';
 import ImgPlaceholder from './placeholder.jpg';
 
-const VARIATION_DEFAULT = 'embeeded_video_default'
+const VARIATION_DEFAULT = 'embedded_video_default'
 
 const EmbeddedVideo = {
   name: "embedded_video",
