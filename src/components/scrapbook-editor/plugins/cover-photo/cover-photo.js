@@ -52,18 +52,18 @@ const OverlayContainer = styled.div`
   position: absolute;
   margin: 10px;
   color: #ffffff;
-  top: ${props => props.top + "%"};
-  right: ${props => props.right + "%"};
-  bottom: ${props => props.bottom + "%"};
-  left: ${props => props.left + "%"};
+  top: ${props => props.top && props.top !== "0" ? props.top + "%" : "auto"};
+  right: ${props => props.right && props.right !== "0" ? props.right + "%" : "auto"};
+  bottom: ${props => props.bottom && props.bottom !== "0" ? props.bottom + "%" : "auto"};
+  left: ${props => props.left && props.left !== "0" ? props.left + "%" : "auto"};
 `;
 function TextOverlayImage(props) {
   const alignmentClass = `text-${props.variationAttrs.align}`;
   const offsetDefined =
-    props.variationAttrs.top !== 0 ||
-    props.variationAttrs.right !== 0 ||
-    props.variationAttrs.bottom !== 0 ||
-    props.variationAttrs.left !== 0;
+    (props.variationAttrs.top && props.variationAttrs.top !== "0") ||
+    (props.variationAttrs.right && props.variationAttrs.right !== "0") !== "0" ||
+    (props.variationAttrs.bottom && props.variationAttrs.bottom !== "0")
+    (props.variationAttrs.left && props.variationAttrs.left !== "0")
 
   return (
     <div style={{ position: "relative" }}>
