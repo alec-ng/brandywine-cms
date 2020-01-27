@@ -11,12 +11,14 @@ import {
   updatePost
 } from "../util/firebase-post-util";
 
-import Image from "../components/scrapbook-editor/plugins/image/index";
-import Markdown from "../components/scrapbook-editor/plugins/markdown/index";
-import CoverPhoto from "../components/scrapbook-editor/plugins/cover-photo/index";
-import Spacer from "../components/scrapbook-editor/plugins/spacer/index";
-import Carousel from "../components/scrapbook-editor/plugins/carousel/index";
-import Video from "../components/scrapbook-editor/plugins/video/index";
+import Image from "../components/scrapbook-editor/plugins/image/";
+import Markdown from "../components/scrapbook-editor/plugins/markdown/";
+import CoverPhoto from "../components/scrapbook-editor/plugins/cover-photo/";
+import Spacer from "../components/scrapbook-editor/plugins/spacer/";
+import Carousel from "../components/scrapbook-editor/plugins/carousel/";
+import Video from "../components/scrapbook-editor/plugins/video/";
+import EmbeddedVideo from "../components/scrapbook-editor/plugins/embedded-video/";
+import HTMLVideo from "../components/scrapbook-editor/plugins/html-video/";
 
 const Admin = function(props) {
   const [loading, setLoading] = useState(true);
@@ -95,4 +97,4 @@ const condition = authUser =>
   authUser && authUser.email === process.env.REACT_APP_ADMIN_EMAIL;
 export default withAuthorization(condition)(Admin);
 
-const plugins = [Image, Markdown, CoverPhoto, Spacer, Carousel, Video];
+const plugins = [Image, Markdown, CoverPhoto, Spacer, Carousel, Video, HTMLVideo, EmbeddedVideo];
