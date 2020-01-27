@@ -8,6 +8,8 @@ function getIndexFromGrouping(grouping, firebase) {
       return firebase.photographyIndex();
     case TRIPREPORT_KEY:
       return firebase.tripreportIndex();
+    default: 
+      throw new Error(`Unexpected grouping: ${grouping}`);
   }
 }
 

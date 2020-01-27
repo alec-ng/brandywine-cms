@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import VisibilitySensor from "react-visibility-sensor";
 import { HTMLVideo, VideoContainer, AlignmentContainer } from "./html-video";
