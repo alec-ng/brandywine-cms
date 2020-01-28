@@ -62,7 +62,7 @@ export function AutoplayElement(props) {
                 bottom={props.variationAttrs.bottom}
                 left={props.variationAttrs.left}
               >
-                <p className={`${alignmentClass} text-overlay`}>
+                <p className={`${alignmentClass} text-overlay mb-0`}>
                   {props.variationAttrs.text}
                 </p>
               </OverlayContainer>
