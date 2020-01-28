@@ -14,7 +14,7 @@ export function ImageElement(props) {
       <img
         alt=""
         src={urlSource}
-        className="img-fluid d-block"
+        className="img-fluid"
       />  
       {props.baseAttrs.primaryText && (
         <h6 className="mt-2 mx-3 mb-0">{props.baseAttrs.primaryText}</h6>
