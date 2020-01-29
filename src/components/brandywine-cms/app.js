@@ -1,5 +1,5 @@
 import React from "react";
-import { BrandywineEditor } from "../scrapbook-editor/";
+import { BrandywineEditor } from "react-brandywine-editor";
 import { useStateValue } from "./state";
 import { ACTION_TYPES } from "./reducers/index";
 import styled from "styled-components";

@@ -11,13 +11,13 @@ import {
   updatePost
 } from "../util/firebase-post-util";
 
-import Image from "../components/scrapbook-editor/plugins/image/";
-import Markdown from "../components/scrapbook-editor/plugins/markdown/";
-import CoverPhoto from "../components/scrapbook-editor/plugins/cover-photo/";
-import Spacer from "../components/scrapbook-editor/plugins/spacer/";
-import Carousel from "../components/scrapbook-editor/plugins/carousel/";
-import EmbeddedVideo from "../components/scrapbook-editor/plugins/embedded-video/";
-import HTMLVideo from "../components/scrapbook-editor/plugins/html-video/";
+import Image from "react-brandywine-editor/lib/plugins/image/";
+import Markdown from "react-brandywine-editor/lib/plugins/markdown/";
+import CoverPhoto from "react-brandywine-editor/lib/plugins/cover-photo/";
+import Spacer from "react-brandywine-editor/lib/plugins/spacer/";
+import Carousel from "react-brandywine-editor/lib/plugins/carousel/";
+import EmbeddedVideo from "react-brandywine-editor/lib/plugins/embedded-video/";
+import HTMLVideo from "react-brandywine-editor/lib/plugins/html-video/";
 
 const Admin = function(props) {
   const [loading, setLoading] = useState(true);
