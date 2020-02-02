@@ -9,7 +9,7 @@ jobs:
   main:
     name: main
     runs-on: ubuntu-latest
-    env:
+    env: 
       REACT_APP_ENV: sandbox 
       REACT_APP_FIREBASE_API_KEY:  ${{ secrets.REACT_APP_SBX_FIREBASE_API_KEY }}
       REACT_APP_AUTH_DOMAIN:  ${{ secrets.REACT_APP_SBX_AUTH_DOMAIN }} 
