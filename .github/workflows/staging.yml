@@ -17,7 +17,7 @@ jobs:
       REACT_APP_PROJECT_ID:  ${{ secrets.REACT_APP_SBX_PROJECT_ID }} 
       REACT_APP_STORAGE_BUCKET:  ${{ secrets.REACT_APP_SBX_STORAGE_BUCKET }} 
       REACT_APP_MESSENGER_SENDER_ID:  ${{ secrets.REACT_APP_SBX_MESSENGER_SENDER_ID }} 
-      REACT_APP_APP_ID:  ${{ secrets.REACT_APP_SBX_ID }} 
+      REACT_APP_APP_ID:  ${{ secrets.REACT_APP_SBX_APP_ID }} 
       REACT_APP_ADMIN_EMAIL: ${{ secrets.REACT_APP_ADMIN_EMAIL }} 
     steps:
       - name: Checkout Repo
