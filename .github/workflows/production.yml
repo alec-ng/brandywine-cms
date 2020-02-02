@@ -19,6 +19,7 @@ jobs:
       REACT_APP_MESSENGER_SENDER_ID:  ${{ secrets.REACT_APP_MESSENGER_SENDER_ID }} 
       REACT_APP_APP_ID:  ${{ secrets.REACT_APP_ID }} 
       REACT_APP_MEASUREMENT_ID: ${{ secrets.REACT_APP_MEASUREMENT_ID }} 
+      REACT_APP_ADMIN_EMAIL: ${{ secrets.REACT_APP_ADMIN_EMAIL }} 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
