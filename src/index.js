@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";
 
 import App from "./App";
-import Firebase, { FirebaseContext } from "./components/firebase";
+import Firebase, { FirebaseContext } from './components/hoc/firebase';
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(

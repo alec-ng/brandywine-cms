@@ -1,7 +1,7 @@
 import React from "react";
-import { withFirebase } from "../components/firebase";
-import { withAuthUser } from "../components/session";
-import SignoutButton from "../components/signout-button";
+import { withFirebase } from "../components/hoc/firebase";
+import { withAuthUser } from "../components/hoc/session";
+import SignoutButton from "../components/stateless/global/signout-button";
 
 /**
  * Page level component for admin section
