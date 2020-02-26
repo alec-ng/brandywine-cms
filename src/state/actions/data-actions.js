@@ -46,11 +46,11 @@ export function deletePost(firebase, id, title) {
 }
 
 export const SAVE_CURRENT_POST = "SAVE_CURRENT_POST";
-export function savePost(firebase, id, cmsPost, grouping) {
+export function savePost(firebase, id, cmsPost, grouping, indexEntry) {
   return dispatch => {
     return dispatch({
       type: SAVE_CURRENT_POST,
-      payload: update(firebase, id, cmsPost, grouping)
+      payload: update(firebase, id, cmsPost, grouping, indexEntry)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("update", cmsPost.post.title)
@@ -61,11 +61,11 @@ export function savePost(firebase, id, cmsPost, grouping) {
 }
 
 export const PUBLISH_CURRENT_POST = "PUBLISH_CURRENT_POST";
-export function publishPost(firebase, id, cmsPost, grouping) {
+export function publishPost(firebase, id, cmsPost, grouping, indexEntry) {
   return dispatch => {
     return dispatch({
       type: PUBLISH_CURRENT_POST,
-      payload: publish(firebase, id, cmsPost, grouping)
+      payload: publish(firebase, id, cmsPost, grouping, indexEntry)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("publish", cmsPost.post.title)

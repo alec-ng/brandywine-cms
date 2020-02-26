@@ -1,17 +1,18 @@
+/**
+ * Collection Definitions
+ */
 export const COLLECTION_PHOTOGRAPHY = "photography";
 export const COLLECTION_TRIPREPORTS = "tripreports";
-
-export function getGroupingMap() {
-  let groupingMap = {};
-  groupingMap[COLLECTION_PHOTOGRAPHY] = 'Travel';
-  groupingMap[COLLECTION_TRIPREPORTS] = 'Hiking';
-  return groupingMap;
-}
 
 export const VALID_COLLECTIONS = [
   COLLECTION_PHOTOGRAPHY,
   COLLECTION_TRIPREPORTS
 ];
+
+export const collectionLabelMap = {
+  [COLLECTION_PHOTOGRAPHY]: 'Travel',
+  [COLLECTION_TRIPREPORTS]: 'Hiking'
+};
 
 export function getIndexRef(collection, firebase) {
   let collectionMap = {};
@@ -19,3 +20,8 @@ export function getIndexRef(collection, firebase) {
   collectionMap[COLLECTION_TRIPREPORTS] = firebase.tripreportIndex();
   return collectionMap[collection];
 }
+
+/**
+ * Collection specific fields for index
+ */
+export const hikingIndexFields = ['area', 'region'];

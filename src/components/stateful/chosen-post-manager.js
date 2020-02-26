@@ -5,13 +5,14 @@ import styled from "styled-components";
 import { withFirebase } from './../hoc/firebase';
 import useHasChanged from '../../hooks/useHasChanged';
 
+import { generateIndexEntry } from '../../util/post-generation';
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
 import { selectCurrentDataSlice, selectPendingStatus } from '../../state/selectors';
 import { 
   deletePost, publishPost, unpublishPost, savePost, SAVE_CURRENT_POST
 } from '../../state/actions/data-actions';
 
-import PageMetadataForm from "../stateless/global/page-metadata-form";
+import PostMetadataForm from "../stateless/global/forms/post-form-composer";
 import { validatePost } from "../../util/post-validation";
 import Spinner from "../stateless/universal/spinner";
 
@@ -33,10 +34,13 @@ function ChosenPostManager({
   data, grouping, chosenPost, savePending, dispatch, firebase
 }) {
   
+  // Hooks
   const hasChanged = useHasChanged(chosenPost.cmsPost, data[chosenPost.key]);
-  const isPublished = chosenPost.cmsPost.post.isPublished;
   const formRef = useRef(null);
+  // Helpers
+  const isPublished = chosenPost.cmsPost.post.isPublished;
   const saveButtonAttribues = hasChanged ? {} : { disabled: true };
+  
 
   // DELETE
   ////////////////////////////////////////////////
@@ -61,23 +65,17 @@ function ChosenPostManager({
 
   function togglePublishModal() {
     let newPublishStatus = !isPublished;
-    const { valid, validationErrors } = validatePost(
-      data,
-      chosenPost,
-      formRef,
-      newPublishStatus
-    );
-    if (!valid) {
-      dispatch(openModal('validationError', { errors: validationErrors }));
+    if (!validate(newPublishStatus)) {
       return;
-    } 
+    }
     const modalType = newPublishStatus ? 'publish' : 'unpublish';
     const confirmationFct = newPublishStatus ? publishConfirm : unpublishConfirm;
     dispatch(openModal(modalType, { onConfirm: confirmationFct }));
   }
   function publishConfirm() {
+    const indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key, grouping);
     dispatch(
-      publishPost(firebase, chosenPost.key, chosenPost.cmsPost, grouping)
+      publishPost(firebase, chosenPost.key, chosenPost.cmsPost, grouping, indexEntry)
     ).catch(err => { console.error(err) });
   }
   function unpublishConfirm() {
@@ -90,24 +88,27 @@ function ChosenPostManager({
   ////////////////////////////////////////////////
  
   function save(e, closePostAfterCompletion = false) {
-    if (validate()) {
-      dispatch(
-        savePost(firebase, chosenPost.key, chosenPost.cmsPost, grouping)
-      ).then(function() {
-        if (closePostAfterCompletion) {
-          dispatch(close());
-        }
-      }).catch(err => { console.error(err) });
+    if (!validate(isPublished)) {
+      return;
     }
+    let indexEntry;
+    if (isPublished) {
+      indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key, grouping);
+    }
+    dispatch(
+      savePost(firebase, chosenPost.key, chosenPost.cmsPost, grouping, indexEntry)
+    ).then(() => {
+      if (closePostAfterCompletion) {
+        dispatch(close());
+      }
+    }).catch(err => { console.error(err) });
   }
 
-  function validate() {
+  function validate(publishStatus) {
     if (!formRef.current.reportValidity()) {
       return false;
     }
-    const { valid, validationErrors } = validatePost(
-      data, chosenPost, isPublished
-    );
+    const { valid, validationErrors } = validatePost(data, chosenPost, publishStatus);
     if (!valid) {
       if (validationErrors.length > 0) {
         dispatch(openModal('validationError', {errors: validationErrors}));
@@ -151,7 +152,12 @@ function ChosenPostManager({
 
       <form ref={formRef}>
         <fieldset disabled={savePending}>
-          <PageMetadataForm chosenPost={chosenPost} onChange={onPostMetadataChange} />
+          <PostMetadataForm
+            grouping={grouping}
+            onInputChange={onPostMetadataChange}
+            cmsPost={chosenPost.cmsPost}
+            showReadOnly={true}
+          />
           <div className="my-3">
             <FullWidthBtn
               type="button"

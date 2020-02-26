@@ -50,7 +50,7 @@ export function remove(id, firebase) {
  * Update cms-pots, posts, postData values.
  * For the postGroup specific index collection, update with new post
  */
-export function publish(firebase, id, cmsPost, grouping) {
+export function publish(firebase, id, cmsPost, grouping, indexEntry) {
   let localCmsPost = JSON.parse(JSON.stringify(cmsPost));
   localCmsPost.post.isPublished = true;
   localCmsPost.lastModified = firebase.timestamp();
@@ -62,11 +62,7 @@ export function publish(firebase, id, cmsPost, grouping) {
         .get(indexCollection)
         .then(postIndex => {
           let index = postIndex.data().index || [];
-          index.push({
-            title: localCmsPost.post.title,
-            date: localCmsPost.post.date,
-            postDataId: id
-          });
+          index.push(indexEntry);
           transaction.update(indexCollection, { index: index });
         })
         .then(() => {
@@ -138,12 +134,12 @@ export function unpublish(firebase, id, cmsPost, grouping) {
 /**
  * Conditional logic whether or not the post is published
  */
-export function update(firebase, id, cmsPost, grouping) {
+export function update(firebase, id, cmsPost, grouping, indexEntry) {
   let localCmsPost = JSON.parse(JSON.stringify(cmsPost));
   localCmsPost.lastModified = firebase.timestamp();
 
   return localCmsPost.post.isPublished
-    ? updatePublishedPost(firebase, id, localCmsPost, grouping)
+    ? updatePublishedPost(firebase, id, localCmsPost, grouping, indexEntry)
     : updateUnpublishedPost(firebase, id, localCmsPost);
 }
 /**
@@ -171,7 +167,7 @@ function updateUnpublishedPost(firebase, id, cmsPost) {
  * If the post was published, ensure that the index entry matches the most up 
  * to date title/date combo in case it was changed
  */
-function updatePublishedPost(firebase, id, cmsPost, grouping) {
+function updatePublishedPost(firebase, id, cmsPost, grouping, indexEntry) {
   return new Promise((resolve, reject) => {
     firebase.runTransaction(transaction => {
       let indexCollection = getIndexRef(grouping, firebase);
@@ -179,11 +175,10 @@ function updatePublishedPost(firebase, id, cmsPost, grouping) {
         .get(indexCollection)
         .then(postIndex => {
           let index = postIndex.data().index;
-          let postIndexEle = index.find(
+          let entryToUpdate = index.findIndex(
             post => post.postDataId === id
           );
-          postIndexEle.title = cmsPost.post.title;
-          postIndexEle.date = cmsPost.post.date;
+          index[entryToUpdate] = indexEntry;
           transaction.update(indexCollection, { index: index });
         })
         .then(() => {

@@ -1,13 +1,11 @@
 import React from "react";
-import { getGroupingMap } from "../../../util/constants";
+import { collectionLabelMap } from "../../../util/constants";
 
 export default function PostGroupingSelect(
   {defaultValue, onChange, disabled=false}
-) {
-  const groupingMapping = getGroupingMap();
-  
-  let optionsList = Object.keys(groupingMapping).map(grouping => {
-    const label = groupingMapping[grouping];
+) {  
+  let optionsList = Object.keys(collectionLabelMap).map(grouping => {
+    const label = collectionLabelMap[grouping];
     return (
       <option value={grouping} key={grouping}>
         {label}

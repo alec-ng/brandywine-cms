@@ -30,7 +30,8 @@ export default function chosenPostReducer({chosenPost = null, data = {}}, action
 
     case UPDATE_CURRENT_POST:
       let post = clonedPost.cmsPost.post;
-      clonedPost.cmsPost.post[action.property] = action.value;
+      let newVal = typeof(action.value) === 'string' ? action.value.trim() : action.value;
+      clonedPost.cmsPost.post[action.property] = newVal;
       clonedPost.cmsPost.post.key = generateKeyFromPost(post);
       return clonedPost;
 

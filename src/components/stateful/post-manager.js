@@ -8,7 +8,7 @@ import GroupingSelect from '../stateless/global/post-grouping-select';
 import Spinner from '../stateless/universal/spinner';
 
 import useFilteredData, { ALL_POSTS } from '../../hooks/useFilteredData';
-import { generateNewCmsPost } from "../../util/post-generation";
+import { generateNewCmsPost, trim } from "../../util/post-generation";
 import { createPost, setGrouping, SET_GROUPING } from '../../state/actions/data-actions';
 import { selectPost, openModal } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
@@ -51,8 +51,9 @@ function PostManager(
   }
   
   // create a new post
-  function onPostCreate({title, date}) {
-    const newCmsPost = generateNewCmsPost(date, title, postGroup);
+  function onPostCreate(newPostValues) {
+    const trimmedVals = trim(newPostValues);
+    const newCmsPost = generateNewCmsPost(trimmedVals, postGroup);
     dispatch(
       createPost(firebase, newCmsPost)
     ).catch(err => { console.error(err); })

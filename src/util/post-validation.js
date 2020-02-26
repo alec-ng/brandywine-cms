@@ -26,7 +26,7 @@ export function validatePost(data, chosenPost, isPublished) {
 /**
  * When creating a new post, ensure that its key is unique across all posts in the same grouping
  */
-export function validateNewPost(title, date, postGroup, data) {
+export function validateNewPost(title, date, data) {
   let errors = [];
   const existingIdList = Object.keys(data).map(id =>
     data[id].post.key.toUpperCase()
