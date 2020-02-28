@@ -8,7 +8,7 @@ export default function GroupingHikingMetadata({onChange, cmsPost}) {
         Region
         <input
           required
-          pattern="[a-zA-Z0-9\s]+"
+          pattern="[a-zA-Z0-9\s']+"
           onChange={onChange}
           minLength="3"
           maxLength="50"
@@ -22,7 +22,7 @@ export default function GroupingHikingMetadata({onChange, cmsPost}) {
         Area
         <input
           required
-          pattern="[a-zA-Z0-9\s]+"
+          pattern="[a-zA-Z0-9\s']+"
           onChange={onChange}
           minLength="3"
           maxLength="50"
