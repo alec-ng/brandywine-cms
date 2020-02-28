@@ -1,48 +1,35 @@
+import { useState, useEffect } from 'react';
 /**
  * Utility methods to help generate a chronological ordering of posts
  */
 
-/**
- * Given a chosenKey that exists in treeData, returns back two arrays - initially selected
- * key comprising of just the chosenkey, and expandedKeys that open all sub nodes leading up to
- * the chosen key
- * treeData is an array of the form returned by createTreeData()
- */
-export function getInitialKeys(chosenNode, treeData) {
-  let initialSelectedKeys = [];
-  let initialExpandedKeys = [];
-  let returnVal = [initialSelectedKeys, initialExpandedKeys];
-
-  if (!chosenNode || !treeData) {
-    return returnVal;
-  }
-
-  // node key, format: ${year}-${month}-${day}-${dbId}
-  const [year, month] = chosenNode.split("-");
-  let yearNode = treeData.find(node => node.key === `year-${year}`);
-  if (!yearNode) {
-    return returnVal;
-  }
-  let monthNode = yearNode.children.find(
-    node => node.key === `month-${year}-${month}`
-  );
-  if (!monthNode) {
-    return returnVal;
-  }
-  initialSelectedKeys.push(`post-${chosenNode}`);
-  initialExpandedKeys.push(yearNode.key);
-  initialExpandedKeys.push(monthNode.key);
-  return returnVal;
-}
+const getYearKey = year => `year-${year}`;
+const getMonthKey = (year, month) => `year-${(year, month)}`;
+const monthMap = {
+  "01": "Jan",
+  "02": "Feb",
+  "03": "Mar",
+  "04": "Apr",
+  "05": "May",
+  "06": "Jun",
+  "07": "Jul",
+  "08": "Aug",
+  "09": "Sep",
+  "10": "Oct",
+  "11": "Nov",
+  "12": "Dec"
+};
 
 /**
  * From an array of posts, returns an array of node objects to be used as treeData
  * for the rc-tree component
  */
-export function createTreeData(data) {
+export function createTreeData(indexArr) {
   // Group all data by yyyy, mm, dd
-  let keyData = getGroupedPostData(data);
+  let keyData = getGroupedPostData(indexArr);
   let treeData = [];
+  let yearKeys = [];
+  let monthKeys = [];
 
   function reverse(a, b) {
     return b - a;
@@ -54,19 +41,21 @@ export function createTreeData(data) {
   sortedYears.forEach(year => {
     let months = [];
     let yearNode = {
-      key: `year-${year}`,
+      key: getYearKey(year),
       title: year.toString(),
       children: months
     };
+    yearKeys.push(yearNode.key);
 
     let sortedMonths = Object.keys(keyData[year]).sort(reverse);
     sortedMonths.forEach(month => {
       let posts = [];
       let monthNode = {
-        key: `month-${year}-${month}`,
+        key: getMonthKey(year, month),
         title: monthMap[month],
         children: posts
       };
+      monthKeys.push(monthNode.key);
 
       let sortedDays = Object.keys(keyData[year][month]).sort(reverse);
       sortedDays.forEach(day => {
@@ -86,10 +75,29 @@ export function createTreeData(data) {
     treeData.push(yearNode);
   });
 
-  return treeData;
+  return { treeData, monthKeys, yearKeys };
 }
 
-// groups all posts by year, then by each year's month, then by each month's date
+/**
+ * Hook for function above
+ */
+export function useTreeData(data) {
+  const [treeData, setTreeData] = useState([]);
+  const [monthKeys, setMonthKeys] = useState([]);
+  const [yearKeys, setYearKeys] = useState([]);
+  useEffect(() => {
+    const { treeData, monthKeys, yearKeys } = createTreeData(data);
+    setTreeData(treeData);
+    setMonthKeys(monthKeys);
+    setYearKeys(yearKeys);
+  }, [data])
+  return {treeData, monthKeys, yearKeys};
+}
+
+/**
+ * groups all posts by year, then by each year's month, 
+ * then by each month's date
+ */
 function getGroupedPostData(data) {
   let keyData = {}; // yy -> {mm -> {post}}
   Object.keys(data).forEach(id => {
@@ -112,17 +120,3 @@ function getGroupedPostData(data) {
   return keyData;
 }
 
-const monthMap = {
-  "01": "Jan",
-  "02": "Feb",
-  "03": "Mar",
-  "04": "Apr",
-  "05": "May",
-  "06": "Jun",
-  "07": "Jul",
-  "08": "Aug",
-  "09": "Sep",
-  "10": "Oct",
-  "11": "Nov",
-  "12": "Dec"
-};
