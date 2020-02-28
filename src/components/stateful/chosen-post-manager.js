@@ -21,7 +21,8 @@ const BackBtn = styled.button`
   border: 1px solid rgba(255, 255, 255, 0.75);
   color: rgba(255, 255, 255, 0.75);
   border-radius: 3px;
-  padding: 2px 10px;
+  padding: 5px 10px;
+  width: 70px;
 `;
 const FullWidthBtn = styled.button`
   width: 100%;
