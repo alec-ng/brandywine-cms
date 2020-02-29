@@ -22,7 +22,6 @@ const BackBtn = styled.button`
   color: rgba(255, 255, 255, 0.75);
   border-radius: 3px;
   padding: 5px 10px;
-  width: 70px;
 `;
 const FullWidthBtn = styled.button`
   width: 100%;
