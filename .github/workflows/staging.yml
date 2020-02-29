@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Staging Main Workflow
 
 on:
   push:
@@ -44,3 +44,12 @@ jobs:
           args: deploy --only hosting:sbx-cms
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+  auto-pull-request:
+    name: PullRequestAction
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: "master"
