@@ -53,3 +53,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: "master"
+          PULL_REQUEST_TITLE: "Staging Changes"
+          PULL_REQUEST_BODY: "Automated PR to merge changes to production from staging"
