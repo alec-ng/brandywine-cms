@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { createTreeData, getInitialKeys } from "../../../util/tree-util";
+import React, { useState, useEffect } from 'react';
+import { useTreeData } from "../../../util/tree-util";
 import TreeView from "../universal/treeview";
 
-export default function PostTree({data, chosenPost, handleNodeSelect}) {
-  const treeData = createTreeData(data);
-  const [selectedKeys, initialExpandedKeys] = getInitialKeys(
-    chosenPost ? chosenPost.key : null,
-    treeData
-  );
+export default function PostTree({data, chosenNode, handleNodeSelect}) { 
+  const { treeData, monthKeys, yearKeys } = useTreeData(data);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const selectedKeys = (chosenNode && chosenNode.key) || [];;
 
-  const [expandedKeys, setExpandedKeys] = useState(initialExpandedKeys);
+  useEffect(() => {
+    if (monthKeys && yearKeys) {
+      setExpandedKeys(monthKeys.concat(yearKeys));
+    }
+  }, [monthKeys, yearKeys])
   
   // If leaf, update seleted post state
   // If not a leaf, expand and show its children

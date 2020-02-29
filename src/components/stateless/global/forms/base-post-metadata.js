@@ -16,7 +16,7 @@ export default function BasePostMetadata({onChange, cmsPost}) {
           minLength="3"
           maxLength="50"
           data-val="title"
-          pattern="[a-zA-Z0-9\s]+"
+          pattern="[a-zA-Z0-9\s']+"
           type="text"
           defaultValue={cmsPost ? cmsPost.post.title : null}
           className="form-control"
