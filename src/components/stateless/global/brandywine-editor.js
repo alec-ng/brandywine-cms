@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BrandywineEditor } from "react-brandywine-editor";
+import { BrandywineEditor } from "react-brandywine-editor/lib/edit-mode/index";
 import Image from "react-brandywine-editor/lib/plugins/image/";
 import Markdown from "react-brandywine-editor/lib/plugins/markdown/";
 import CoverPhoto from "react-brandywine-editor/lib/plugins/cover-photo/";
@@ -13,12 +13,14 @@ const plugins = [Image, Markdown, CoverPhoto, Spacer, Carousel, HTMLVideo, Embed
 
 export default function Editor({postKey, postData, onChange}) {
   return (
-    <BrandywineEditor
-      showPluginDescription={false}
-      plugins={plugins}
-      key={postKey}
-      onChange={onChange}
-      pageData={postData}
-    />
-  )
+    <div className="mx-5">
+      <BrandywineEditor
+        showPluginDescription={false}
+        plugins={plugins}
+        key={postKey}
+        onChange={onChange}
+        pageData={postData}
+      />
+    </div>
+  );
 }
