@@ -9,11 +9,9 @@ import BrandywineCMS from '../components/stateful/brandywine-cms';
 
 const Admin = function() {
   return (
-    <div className="container-fluid p-0">
-      <Provider store={store}>
-        <BrandywineCMS />
-      </Provider>
-    </div>
+    <Provider store={store}>
+      <BrandywineCMS />
+    </Provider>
   );
 }
 
