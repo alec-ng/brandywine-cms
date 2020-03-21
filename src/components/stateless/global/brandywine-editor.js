@@ -9,9 +9,22 @@ import Carousel from "react-brandywine-editor/lib/plugins/carousel/";
 import EmbeddedVideo from "react-brandywine-editor/lib/plugins/embedded-video/";
 import HTMLVideo from "react-brandywine-editor/lib/plugins/html-video/";
 
-const plugins = [Image, Markdown, CoverPhoto, Spacer, Carousel, HTMLVideo, EmbeddedVideo];
+const plugins = [
+  Image, 
+  Markdown, 
+  CoverPhoto, 
+  Spacer, 
+  Carousel, 
+  HTMLVideo, 
+  EmbeddedVideo
+];
 
-export default function Editor({postKey, postData, onChange}) {
+/**
+ * Renders a brandywine editor, and only rerenders if the postKey changes
+ * (postData is loaded initially and doesn't need to be synced)
+ */
+function Editor({postKey, postData, onChange}) {
+  console.log('rerendered');
   return (
     <div className="mx-5">
       <BrandywineEditor
@@ -24,3 +37,8 @@ export default function Editor({postKey, postData, onChange}) {
     </div>
   );
 }
+
+function isEqual(prevProps, nextProps) {
+  return prevProps.postKey === nextProps.postKey;
+}
+export default React.memo(Editor, isEqual);
