@@ -1,27 +1,22 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    boxShadow: 'none'
+  }
+}));
 
 export default function Header(props) {
+  const styles = useStyles();
   return (
-    <>
-      <HideOnScroll {...props}>
-        <AppBar>
-          <Toolbar>{props.children}</Toolbar>
-        </AppBar>
-      </HideOnScroll>
-      <Toolbar />
-    </>
+    <AppBar classes={{ root: styles.root }}>
+      <Toolbar>{
+        props.children}
+      </Toolbar>
+    </AppBar>
   );
 }
 
-function HideOnScroll(props) {
-  const trigger = useScrollTrigger();
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {props.children}
-    </Slide>
-  );
-}

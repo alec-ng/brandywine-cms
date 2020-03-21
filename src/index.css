@@ -13,6 +13,7 @@ body,
   -moz-osx-font-smoothing: grayscale;
   font-weight: 100;
   font-size: 1rem;
+  overflow-y: hidden;
 }
 
 code {

@@ -24,7 +24,7 @@ function App({chosenPost, dispatch}) {
     }));
   }
   return (
-    <>
+    <RootContainer className="container-fluid px-0">
       <ModalManager />
       <SnackbarManager />
       <Header>
@@ -53,7 +53,7 @@ function App({chosenPost, dispatch}) {
           </h1>
         </EmptyEditorContainer>
       )}
-    </>
+    </RootContainer>
   );
 }
 const mapStateToProps = state => {
@@ -63,9 +63,16 @@ const mapStateToProps = state => {
 }; 
 export default connect(mapStateToProps)(App);
 
+// -------------- STYLES
 
+const appbarHeight = '64px';
+
+const RootContainer = styled.div`
+  padding-top: ${appbarHeight};
+`;
 const EditorContainer = styled.div`
-  height: calc(100vh - 64px);
+  height: calc(100vh - ${appbarHeight});
+  overflow-y: auto;
 `;
 const PostManagerContainer = styled.div`
   display: ${props => (props.chosenPost ? "none" : "inherit")};
@@ -73,7 +80,7 @@ const PostManagerContainer = styled.div`
 const EmptyEditorContainer = styled.div`
   display: flex;
   text-align: center;
-  height: 80vh;
+  height: calc(100vh - ${appbarHeight});
   justify-content: center;
   flex-direction: column;
 `;
