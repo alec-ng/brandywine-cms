@@ -24,7 +24,6 @@ const plugins = [
  * (postData is loaded initially and doesn't need to be synced)
  */
 function Editor({postKey, postData, onChange}) {
-  console.log('rerendered');
   return (
     <div className="mx-5">
       <BrandywineEditor
