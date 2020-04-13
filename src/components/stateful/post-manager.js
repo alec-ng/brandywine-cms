@@ -9,7 +9,7 @@ import Spinner from '../stateless/universal/spinner';
 
 import useFilteredData, { ALL_POSTS } from '../../hooks/useFilteredData';
 import { generateNewCmsPost, trim } from "../../util/post-generation";
-import { createPost, setGrouping, SET_GROUPING } from '../../state/actions/data-actions';
+import { createPost, GET_ALL_POSTS } from '../../state/actions/data-actions';
 import { selectPost, openModal } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
 
@@ -21,13 +21,16 @@ import { selectPendingStatus } from '../../state/selectors';
  * - click a post to view and edit it
  * - create a new post
  */
-function PostManager(
-  {chosenPost, postGroup, data, postsPending, dispatch, firebase}
-) {
+function PostManager({
+  chosenPost, 
+  data, 
+  postsPending, 
+  dispatch, 
+  firebase
+}) {
 
   const [filter, setFilter] = useState(ALL_POSTS);
-  const dataSlice = data[postGroup];
-  const filteredData = useFilteredData(dataSlice, filter);
+  const filteredData = useFilteredData(data, filter);
   
   // filters posts by publish status
   function toggleFilter(e) {
@@ -38,22 +41,11 @@ function PostManager(
   function handleNodeSelect(newKey) {
     dispatch(selectPost(newKey));
   }
-
-  // filter all posts by specific grouping
-  function onGroupingSelect(e) {
-    const grouping = e.currentTarget.value;
-    const dispatchReturnVal = dispatch(
-      setGrouping(firebase, grouping, data)
-    );
-    if (dispatchReturnVal.then) {
-      dispatchReturnVal.catch(err => { console.error(err) });
-    }
-  }
   
   // create a new post
   function onPostCreate(newPostValues) {
     const trimmedVals = trim(newPostValues);
-    const newCmsPost = generateNewCmsPost(trimmedVals, postGroup);
+    const newCmsPost = generateNewCmsPost(trimmedVals);
     dispatch(
       createPost(firebase, newCmsPost)
     ).catch(err => { console.error(err); })
@@ -61,20 +53,19 @@ function PostManager(
   function openCreateModal() {
     dispatch(openModal('create', {
       onSubmit: onPostCreate,
-      groupingDataSlice: dataSlice,
-      postGroup: postGroup
+      data: data,
     }));
   }
 
   return (
     <>
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <GroupingSelect 
           onChange={onGroupingSelect} 
           defaultValue={postGroup} 
           disabled={postsPending}
         />
-      </div>
+      </div> */}
       <div className="mb-3">
         <PostFilterButtons
           activeKey={filter}
@@ -96,18 +87,16 @@ function PostManager(
               />     
         }
       </div>
-      {postGroup &&
-        <div className="text-center">
-          <button
-            style={{ width: "100%" }}
-            className="btn btn-success"
-            type="button"
-            onClick={openCreateModal}
-          >
-            Create New Post
-          </button>
-        </div>
-      }
+      <div className="text-center">
+        <button
+          style={{ width: "100%" }}
+          className="btn btn-success"
+          type="button"
+          onClick={openCreateModal}
+        >
+          Create New Post
+        </button>
+      </div>
     </>
   );
 }
@@ -116,8 +105,7 @@ const mapStateToProps = (state) => {
   return {
     chosenPost: state.chosenPost,
     data: state.data,
-    postGroup: state.postGroup,
-    postsPending: selectPendingStatus(state, SET_GROUPING)
+    postsPending: selectPendingStatus(state, GET_ALL_POSTS)
   }
 }
 export default connect(mapStateToProps)(withFirebase(PostManager));

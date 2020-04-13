@@ -1,5 +1,4 @@
-import { getActionName, trimFulfilledAction } from './index';
-import { SET_GROUPING } from '../actions/data-actions';
+import { getActionName } from './index';
 import {
   OPEN_MODAL,
   CLOSE_MODAL,
@@ -67,13 +66,3 @@ export function modalReducer(state = null, action) {
   }
 }
 
-export function postGroupReducer(state = null, action) {
-  const baseActionName = trimFulfilledAction(action.type);
-
-  switch (baseActionName) {
-    case SET_GROUPING:
-      return action.payload.grouping;      
-    default: 
-      return state;
-  }
-}

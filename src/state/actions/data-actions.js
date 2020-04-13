@@ -1,5 +1,5 @@
 import {
-  getCMSPostsByGrouping,
+  getPostDictionary,
   remove,
   publish,
   unpublish,
@@ -90,15 +90,13 @@ export function unpublishPost(firebase, id, cmsPost, grouping) {
   }
 }
 
-export const SET_GROUPING = 'SET_GROUPING';
-export function setGrouping(firebase, grouping, data) {
-  // If we have already retrieved the grouping data, no need for async logic
-  if (data[grouping]) {
-    return {type: SET_GROUPING, payload: { grouping: grouping }};
-  }
-  return {
-    type: SET_GROUPING,
-    payload: getCMSPostsByGrouping(grouping, firebase)
+export const GET_ALL_POSTS = 'GET_ALL_POSTS';
+export function getPosts(firebase) {
+  return dispatch => {
+    dispatch({
+      type: GET_ALL_POSTS,
+      payload: getPostDictionary(firebase)
+    });
   }
 }
 

@@ -3,7 +3,3 @@ export function selectPendingStatus(state, actionType) {
     ? state.pending[actionType].pending
     : false;
 }
-
-export function selectCurrentDataSlice(state) {
-  return state.data[state.postGroup] || {};
-}

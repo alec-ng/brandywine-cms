@@ -7,9 +7,13 @@ import NewPostForm from '../forms/post-form-composer';
 /*
  * Renders a button that opens up a modal to create a new post
  */
-export default function CreatePostModal(
-  {open, onClose, onSubmit, groupingDataSlice, postGroup, locked}
-) {  
+export default function CreatePostModal({
+  open, 
+  onClose, 
+  onSubmit, 
+  data, 
+  locked
+}) {  
   const [validationErrors, setValidationErrors] = useState([]);
   const formRef = useRef();
 
@@ -31,7 +35,7 @@ export default function CreatePostModal(
 
     let validationErrors = [];
     validationErrors.push(
-      ...validateNewPost(newPostValues.title, newPostValues.date, groupingDataSlice)
+      ...validateNewPost(newPostValues.title, newPostValues.date, data)
     );
     setValidationErrors(validationErrors);
     
@@ -52,10 +56,7 @@ export default function CreatePostModal(
         
         <form ref={formRef}>
           <fieldset disabled={locked}>
-            <NewPostForm 
-              grouping={postGroup}
-              showReadOnly={false}
-            />
+            <NewPostForm showReadOnly={false} />
             {validationErrors.length > 0 && (
               <div className="text-center mb-4" style={{ color: "red" }}>
                 {validationErrors.map((error, i) => 

@@ -1,14 +1,13 @@
 import React from "react";
 import moment from "moment";
 import FormInputWrapper from '../../universal/form-input-wrapper';
-import { collectionLabelMap } from '../../../../util/constants';
 
 const datetimeFormat = "YYYY-MM-DD h:mm a";
 
 /**
  * Renders readonly inputs for post properties that cannot be modified by the user
  */
-export default function ReadonlyMetadata({cmsPost, grouping}) {
+export default function ReadonlyMetadata({ cmsPost }) {
   let lastModified = cmsPost.lastModified;
   let lastModifiedStr;
   if (!lastModified) {
@@ -22,15 +21,13 @@ export default function ReadonlyMetadata({cmsPost, grouping}) {
       : moment.unix(lastModified.seconds).format(datetimeFormat); // firestore value
   }
 
-  const collectionLabel = collectionLabelMap[grouping];
-
   return (
     <>
     <FormInputWrapper>
-        Collection
+        Grouping
         <input
           style={{ color: "white" }}
-          defaultValue={collectionLabel}
+          defaultValue={cmsPost.post.grouping}
           disabled
           readOnly
           className="form-control-plaintext"

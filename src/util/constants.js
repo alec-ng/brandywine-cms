@@ -1,4 +1,17 @@
 /**
+ * "groupings" --> post categorization, by activity
+ */
+export const Constants = {
+  categories: {
+    hiking: 'hiking',
+    travel: 'travel',
+    climbing: 'climbing'
+  }
+}
+
+
+
+/**
  * Collection Definitions
  */
 export const COLLECTION_PHOTOGRAPHY = "photography";

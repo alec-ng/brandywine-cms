@@ -5,12 +5,11 @@ import promise from 'redux-promise-middleware';
 import { MainReducer } from "./reducers";
 
 export const DefaultState = {
-  // postGroup : postId : cms-post
+  // dictionary of firebase id -> cms-post document
   data: {}, 
-  // {key, cmsPost}  - Note: it should have any reference to anything in data
+  // object with two properties: {key, cmsPost}
   chosenPost: null, 
-  // unique grouping to filter posts
-  postGroup: null,
+  
   // {type: key of modal to show, payload: object to be passed as props to the modal}
   showModal: null,
   // string with message to populate in snackbar

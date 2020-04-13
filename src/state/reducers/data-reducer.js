@@ -6,7 +6,7 @@ import {
   SAVE_CURRENT_POST,
   PUBLISH_CURRENT_POST,
   UNPUBLISH_CURRENT_POST,
-  SET_GROUPING,
+  GET_ALL_POSTS,
 } from '../actions/data-actions';
 
 
@@ -14,52 +14,40 @@ function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export default function dataReducer({data = {}, chosenPost = null, postGroup = null}, action) {
+export default function dataReducer({data = {}, chosenPost = null}, action) {
   const baseActionName = trimFulfilledAction(action.type);
-  const dataPostGroupSlice = data[postGroup];
   let mergePost = {};
   let clonedChosenPost = deepClone(chosenPost);
-
-  function mergeDataSlice(postGroupSlice) {
-    let slice = {};
-    slice[postGroup] = postGroupSlice;
-    return Object.assign({}, data, slice);
-  }
 
   switch (baseActionName) {
     case CREATE_POST:
       let newPost = {};
       newPost[action.payload.newId] = deepClone(action.payload.cmsPost);
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, newPost));
+      return Object.assign({}, data, newPost);
 
     case DELETE_POST:
-      let clonedData = deepClone(dataPostGroupSlice);
+      let clonedData = deepClone(data);
       delete clonedData[action.payload.id];
-      return mergeDataSlice(clonedData);
-    
+      return clonedData;
+  
     case SAVE_CURRENT_POST:
       clonedChosenPost.cmsPost.lastModified = moment();
       mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
+      return Object.assign({}, data, mergePost);
     
     case UNPUBLISH_CURRENT_POST:
       clonedChosenPost.cmsPost.post.isPublished = false;
       mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
+      return Object.assign({}, data, mergePost);
     
     case PUBLISH_CURRENT_POST:
       clonedChosenPost.cmsPost.post.isPublished = true;
       mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
+      return Object.assign({}, data, mergePost);
 
-    case SET_GROUPING:
-      if (data[action.payload.grouping]) {
-        return data;
-      }
-      let newData = {};
-      newData[action.payload.grouping] = action.payload.data;
-      return Object.assign({}, data, newData);
-
+    case GET_ALL_POSTS:
+      return action.payload;  
+    
     default:
       return data;
   }

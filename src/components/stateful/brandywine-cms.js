@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { withFirebase } from '../hoc/firebase';
 import { connect } from 'react-redux';
 
 import { updatePost } from '../../state/actions';
+import { getPosts } from '../../state/actions/data-actions';
 
 import Header from "../stateless/universal/header";
 import Editor from '../stateless/global/brandywine-editor';
@@ -15,7 +17,12 @@ import ChosenPostManager from "./chosen-post-manager";
 /**
  * Top level app composition container component
  */
-function App({chosenPost, dispatch}) {
+function App({chosenPost, dispatch, firebase}) {
+
+  // One time initial load to get all published posts
+  useEffect(() => {
+    dispatch(getPosts(firebase));
+  }, [])
 
   function onEditorChange(header, blocks) {
     dispatch(updatePost({
@@ -61,7 +68,7 @@ const mapStateToProps = state => {
     chosenPost: state.chosenPost
   }
 }; 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(withFirebase(App));
 
 // -------------- STYLES
 

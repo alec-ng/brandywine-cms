@@ -4,8 +4,7 @@ import dataReducer from './data-reducer';
 import {
   pendingReducer,
   snackbarReducer,
-  modalReducer,
-  postGroupReducer
+  modalReducer
 } from './reducers';
 
 export const MainReducer = (state = {}, action) => {
@@ -13,15 +12,12 @@ export const MainReducer = (state = {}, action) => {
     data: dataReducer({
       data: state.data,
       chosenPost: state.chosenPost,
-      postGroup: state.postGroup
     }, action),
     
     chosenPost: chosenPostReducer({ 
-      data: state.data[state.postGroup],
+      data: state.data,
       chosenPost: state.chosenPost
     }, action),
-
-    postGroup: postGroupReducer(state.postGroup, action),
     showModal: modalReducer(state.showModal, action),
     snackbar: snackbarReducer(state.snackbar, action),
     pending: pendingReducer(state.pending, action),

@@ -1,5 +1,19 @@
 import { COLLECTION_TRIPREPORTS, hikingIndexFields } from './constants';
 
+
+/**
+ * Returns case insensitive slug 
+ */
+export function getSlug(date, title) {
+  return `${date}-${title}`.toUpperCase();
+}
+export function getSlugFromMetadata(metadata) {
+  const { date, title } = metadata;
+  return getSlug(date, title);
+}
+
+
+
 // The post key is unique but separate from the database id
 // Used to generate a nice looking url path consisting of the date and title
 export function generateKey(postDate, postTitle) {
@@ -25,7 +39,7 @@ export function trim(obj) {
  * Creates a document to insert in the cms-post collection
  * newPostValues should be a key value pairing of post fields 
  */
-export function generateNewCmsPost(newPostValues, grouping) {
+export function generateNewCmsPost(newPostValues) {
   let cmsPost = {};
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, "0");
@@ -36,7 +50,6 @@ export function generateNewCmsPost(newPostValues, grouping) {
   let post = Object.assign({}, newPostValues, {
     key: generateKey(newPostValues.date, newPostValues.title),
     isPublished: false,
-    grouping: grouping
   });
   cmsPost.post = post;
   cmsPost.postData = {};

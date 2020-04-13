@@ -7,7 +7,7 @@ import useHasChanged from '../../hooks/useHasChanged';
 
 import { generateIndexEntry } from '../../util/post-generation';
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
-import { selectCurrentDataSlice, selectPendingStatus } from '../../state/selectors';
+import { selectPendingStatus } from '../../state/selectors';
 import { 
   deletePost, publishPost, unpublishPost, savePost, SAVE_CURRENT_POST
 } from '../../state/actions/data-actions';
@@ -31,7 +31,11 @@ const FullWidthBtn = styled.button`
  * Component manager for toolbar view when a post is selected
  */
 function ChosenPostManager({
-  data, grouping, chosenPost, savePending, dispatch, firebase
+  data, 
+  chosenPost, 
+  savePending, 
+  dispatch, 
+  firebase
 }) {
   
   // Hooks
@@ -73,14 +77,14 @@ function ChosenPostManager({
     dispatch(openModal(modalType, { onConfirm: confirmationFct }));
   }
   function publishConfirm() {
-    const indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key, grouping);
+    const indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key);
     dispatch(
-      publishPost(firebase, chosenPost.key, chosenPost.cmsPost, grouping, indexEntry)
+      publishPost(firebase, chosenPost.key, chosenPost.cmsPost, indexEntry)
     ).catch(err => { console.error(err) });
   }
   function unpublishConfirm() {
     dispatch(
-      unpublishPost(firebase, chosenPost.key, chosenPost.cmsPost, grouping)
+      unpublishPost(firebase, chosenPost.key, chosenPost.cmsPost)
     ).catch(err => { console.error(err) });
   }
 
@@ -93,10 +97,10 @@ function ChosenPostManager({
     }
     let indexEntry;
     if (isPublished) {
-      indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key, grouping);
+      indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key);
     }
     dispatch(
-      savePost(firebase, chosenPost.key, chosenPost.cmsPost, grouping, indexEntry)
+      savePost(firebase, chosenPost.key, chosenPost.cmsPost, indexEntry)
     ).then(() => {
       if (closePostAfterCompletion) {
         dispatch(close());
@@ -153,7 +157,6 @@ function ChosenPostManager({
       <form ref={formRef}>
         <fieldset disabled={savePending}>
           <PostMetadataForm
-            grouping={grouping}
             onInputChange={onPostMetadataChange}
             cmsPost={chosenPost.cmsPost}
             showReadOnly={true}
@@ -192,8 +195,7 @@ function ChosenPostManager({
 const mapStateToProps = (state) => {
   return {
     chosenPost: state.chosenPost,
-    data: selectCurrentDataSlice(state),
-    grouping: state.postGroup,
+    data: state.data,
     savePending: selectPendingStatus(state, SAVE_CURRENT_POST)
   }
 }
