@@ -1,13 +1,14 @@
-/**
- * "groupings" --> post categorization, by activity
- */
-export const Constants = {
-  categories: {
-    hiking: 'hiking',
-    travel: 'travel',
-    climbing: 'climbing'
+const Constants = {
+   // post categorization, by activity
+  POST_GROUPINGS: {
+    hiking: 'Hiking',
+    travel: 'Travel',
+    climbing: 'Climbing'
   }
 }
+
+export default Constants;
+
 
 
 

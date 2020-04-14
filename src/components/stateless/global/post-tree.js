@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTreeData } from "../../../util/tree-util";
-import TreeView from "../universal/treeview";
+import TreeView from "./treeview";
 
 export default function PostTree({data, chosenNode, handleNodeSelect}) { 
   const { treeData, monthKeys, yearKeys } = useTreeData(data);

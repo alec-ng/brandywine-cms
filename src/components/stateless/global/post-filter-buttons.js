@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonGroup from "../universal/button-group";
+import ButtonGroup from "../generic/button-group";
 import { ALL_POSTS, PUBLISHED_POSTS, DRAFT_POSTS } from '../../../hooks/useFilteredData';
 
 export default function PostFilterButtons({activeKey, onClick}) {

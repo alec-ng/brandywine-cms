@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../../universal/modal';
+import Modal from '../../generic/modal';
 
 export default function ValidationErrorModal({open, errors, onClose}) {
   if (!errors || errors.length === 0) {

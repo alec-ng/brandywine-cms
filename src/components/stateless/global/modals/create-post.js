@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
 import { validateNewPost } from '../../../../util/post-validation';
-import Modal from "../../universal/modal";
-import Spinner from "../../universal/spinner";
-import NewPostForm from '../forms/post-form-composer';
+import Modal from "../../generic/modal";
+import Spinner from "../../generic/spinner";
+import BaseMetadataForm from '../forms/base-post-metadata';
 
 /*
  * Renders a button that opens up a modal to create a new post
@@ -15,7 +15,18 @@ export default function CreatePostModal({
   locked
 }) {  
   const [validationErrors, setValidationErrors] = useState([]);
+  const [values, setValues] = useState({
+    title: '',
+    date: '',
+    grouping: ''
+  });
   const formRef = useRef();
+
+  function onInputChange(e) {
+    setValues(Object.assign({}, values, {
+      [e.currentTarget.name] : e.target.value
+    }));
+  }
 
   /**
    * Validates the current HTML form and runs standard validation for non-published posts
@@ -25,28 +36,20 @@ export default function CreatePostModal({
     if (!formRef.current.reportValidity()) {
         return;
     }
-    const inputs = formRef.current.querySelectorAll('input')
-    let newPostValues = {};
-    inputs.forEach(input => {
-      if (input.dataset.val && input.value) {
-        newPostValues[input.dataset.val] = input.value;
-      }
-    });
-
-    let validationErrors = [];
-    validationErrors.push(
-      ...validateNewPost(newPostValues.title, newPostValues.date, data)
+    let validationErrors = [].push(
+      ...validateNewPost(values.title, values.date, data)
     );
     setValidationErrors(validationErrors);
     
     if (validationErrors.length === 0) {
-      onSubmit(newPostValues);
+      onSubmit(values);
     }
   }
 
   return (
     <div>
       <Modal open={open} handleClose={onClose} locked={locked}>
+
         <h2>Create a new post</h2>
         <p>
           Enter a unique title and date combination.
@@ -54,9 +57,12 @@ export default function CreatePostModal({
           Titles can only be alphanumeric with spaces.
         </p>
         
-        <form ref={formRef}>
-          <fieldset disabled={locked}>
-            <NewPostForm showReadOnly={false} />
+        <fieldset disabled={locked}>  
+          <form ref={formRef}>
+            <BaseMetadataForm
+              onChange={onInputChange}
+              values={values}
+            />
             {validationErrors.length > 0 && (
               <div className="text-center mb-4" style={{ color: "red" }}>
                 {validationErrors.map((error, i) => 
@@ -64,11 +70,9 @@ export default function CreatePostModal({
                 )}
               </div>
             )}      
-          </fieldset>
-        </form>
+          </form>
         
-        <div className="text-right">
-          <fieldset disabled={locked}>
+          <div className="text-right">
             <button
               type="button"
               onClick={onClose}
@@ -83,8 +87,8 @@ export default function CreatePostModal({
               {locked && <Spinner />}
               Create
             </button>
-          </fieldset>
-        </div>
+          </div>
+        </fieldset>
 
       </Modal>
     </div>

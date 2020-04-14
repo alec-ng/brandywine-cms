@@ -4,14 +4,18 @@ import React from "react";
  * Renders a group of buttons with radio behaviour
  * Fully controlled active state through keys
  */
-export default function ButtonGroup(props) {
-  const buttonList = props.buttons.map(button => (
+export default function ButtonGroup({ 
+  buttons,
+  activeKey,
+  onClick 
+}) {
+  const buttonList = buttons.map(button => (
     <Button
       key={button.key}
-      activeKey={props.activeKey}
+      activeKey={activeKey}
       buttonKey={button.key}
       label={button.label}
-      onClick={props.onClick}
+      onClick={onClick}
     />
   ));
 
@@ -22,9 +26,14 @@ export default function ButtonGroup(props) {
   );
 }
 
-function Button(props) {
+function Button({
+  activeKey,
+  buttonKey,
+  onClick,
+  label
+}) {
   let classes = "btn btn-secondary";
-  if (props.activeKey === props.buttonKey) {
+  if (activeKey === buttonKey) {
     classes += " active";
   }
   return (
@@ -32,11 +41,11 @@ function Button(props) {
       <input
         type="radio"
         name="options"
-        data-buttonkey={props.buttonKey}
-        onClick={props.onClick}
+        data-buttonkey={buttonKey}
+        onClick={onClick}
         autoComplete="off"
       />{" "}
-      {props.label}
+      {label}
     </label>
   );
 }

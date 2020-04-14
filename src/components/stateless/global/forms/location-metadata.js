@@ -1,0 +1,63 @@
+import React from "react";
+import FormInputWrapper from '../../generic/form-input-wrapper';
+
+export default function LocationMetadata({onChange, values}) {
+  return (
+    <>
+      <FormInputWrapper>
+        Region
+        <input
+          name="region"
+          type="text"
+          required
+          pattern="[a-zA-Z0-9\s']+"
+          onChange={onChange}
+          minLength="3"
+          maxLength="50"
+          value={values.region}
+          className="form-control"
+        />
+      </FormInputWrapper>
+      <FormInputWrapper>
+        Area
+        <input
+          name="area"
+          type="text"
+          required
+          pattern="[a-zA-Z0-9\s']+"
+          onChange={onChange}
+          minLength="3"
+          maxLength="50"
+          value={values.area}
+          className="form-control"
+        />
+      </FormInputWrapper>
+      <FormInputWrapper>
+        Latitude
+        <input
+          name="latitude"
+          type="number"
+          required
+          onChange={onChange}
+          min="-90"
+          max="90"
+          value={values.lat}
+          className="form-control"
+        />
+      </FormInputWrapper>
+      <FormInputWrapper>
+        Longitude
+        <input
+          name="longitude"
+          type="number"
+          required
+          onChange={onChange}
+          min="-180"
+          max="180"
+          value={values.lng}
+          className="form-control"
+        />
+      </FormInputWrapper>
+    </>
+  );
+}

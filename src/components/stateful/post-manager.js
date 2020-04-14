@@ -4,8 +4,7 @@ import { withFirebase } from './../hoc/firebase';
 
 import PostFilterButtons from '../stateless/global/post-filter-buttons';
 import PostTree from '../stateless/global/post-tree';
-import GroupingSelect from '../stateless/global/post-grouping-select';
-import Spinner from '../stateless/universal/spinner';
+import Spinner from '../stateless/generic/spinner';
 
 import useFilteredData, { ALL_POSTS } from '../../hooks/useFilteredData';
 import { generateNewCmsPost, trim } from "../../util/post-generation";
@@ -59,13 +58,6 @@ function PostManager({
 
   return (
     <>
-      {/* <div className="mb-3">
-        <GroupingSelect 
-          onChange={onGroupingSelect} 
-          defaultValue={postGroup} 
-          disabled={postsPending}
-        />
-      </div> */}
       <div className="mb-3">
         <PostFilterButtons
           activeKey={filter}

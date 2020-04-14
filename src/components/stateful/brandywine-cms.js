@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { updatePost } from '../../state/actions';
 import { getPosts } from '../../state/actions/data-actions';
 
-import Header from "../stateless/universal/header";
+import Header from "../stateless/global/header";
 import Editor from '../stateless/global/brandywine-editor';
 import SidebarDrawer from "../stateless/global/sidebar-drawer";
 import ModalManager from './modal-manager';

@@ -12,9 +12,9 @@ import {
   deletePost, publishPost, unpublishPost, savePost, SAVE_CURRENT_POST
 } from '../../state/actions/data-actions';
 
-import PostMetadataForm from "../stateless/global/forms/post-form-composer";
+import MetadataForm from "../stateless/global/forms/metadata-form";
 import { validatePost } from "../../util/post-validation";
-import Spinner from "../stateless/universal/spinner";
+import Spinner from "../stateless/generic/spinner";
 
 const BackBtn = styled.button`
   background: none;
@@ -142,9 +142,9 @@ function ChosenPostManager({
     dispatch(closeModal());
   }
   
-  function onPostMetadataChange(e) {
+  function onMetadataChange(e) {
     dispatch(
-      updateMetadata(e.currentTarget.dataset.val, e.currentTarget.value)
+      updateMetadata(e.currentTarget.name, e.currentTarget.value)
     )
   }
 
@@ -156,10 +156,9 @@ function ChosenPostManager({
 
       <form ref={formRef}>
         <fieldset disabled={savePending}>
-          <PostMetadataForm
-            onInputChange={onPostMetadataChange}
+          <MetadataForm
+            onInputChange={onMetadataChange}
             cmsPost={chosenPost.cmsPost}
-            showReadOnly={true}
           />
           <div className="my-3">
             <FullWidthBtn

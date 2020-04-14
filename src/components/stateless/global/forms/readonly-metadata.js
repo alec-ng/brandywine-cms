@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import FormInputWrapper from '../../universal/form-input-wrapper';
+import FormInputWrapper from '../../generic/form-input-wrapper';
 
 const datetimeFormat = "YYYY-MM-DD h:mm a";
 
@@ -8,7 +8,7 @@ const datetimeFormat = "YYYY-MM-DD h:mm a";
  * Renders readonly inputs for post properties that cannot be modified by the user
  */
 export default function ReadonlyMetadata({ cmsPost }) {
-  let lastModified = cmsPost.lastModified;
+  const lastModified = cmsPost.lastModified;
   let lastModifiedStr;
   if (!lastModified) {
     lastModifiedStr = "N/A";
@@ -23,17 +23,6 @@ export default function ReadonlyMetadata({ cmsPost }) {
 
   return (
     <>
-    <FormInputWrapper>
-        Grouping
-        <input
-          style={{ color: "white" }}
-          defaultValue={cmsPost.post.grouping}
-          disabled
-          readOnly
-          className="form-control-plaintext"
-          type="text"
-        />
-      </FormInputWrapper>
       <FormInputWrapper>
         Created
         <input
