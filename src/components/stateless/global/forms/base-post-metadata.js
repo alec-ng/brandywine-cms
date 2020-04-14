@@ -2,6 +2,8 @@ import React from "react";
 import FormInputWrapper from '../../generic/form-input-wrapper';
 import Constants from '../../../../util/constants';
 
+export const inputNames = ['title', 'date', 'grouping'];
+
 /**
  * Renders post properties common to posts across all groupings
  * If a change handler and cmsPost is given, bind them to the inputs
@@ -47,7 +49,7 @@ export default function BasePostMetadata({ onChange, values }) {
           {
             Object.keys(Constants.POST_GROUPINGS).map(
               key => 
-                <option>
+                <option key={key}>
                   {Constants.POST_GROUPINGS[key]}
                 </option>
             )

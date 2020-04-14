@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { validateNewPost } from '../../../../util/post-validation';
 import Modal from "../../generic/modal";
 import Spinner from "../../generic/spinner";
-import BaseMetadataForm from '../forms/base-post-metadata';
+import BaseMetadataForm, { inputNames } from '../forms/base-post-metadata';
 
 /*
  * Renders a button that opens up a modal to create a new post
@@ -15,16 +15,12 @@ export default function CreatePostModal({
   locked
 }) {  
   const [validationErrors, setValidationErrors] = useState([]);
-  const [values, setValues] = useState({
-    title: '',
-    date: '',
-    grouping: ''
-  });
+  const [values, setValues] = useState(getEmptyFormValues());
   const formRef = useRef();
 
   function onInputChange(e) {
     setValues(Object.assign({}, values, {
-      [e.currentTarget.name] : e.target.value
+      [e.target.name] : e.target.value
     }));
   }
 
@@ -34,15 +30,13 @@ export default function CreatePostModal({
    */
   function validateAndCreate() {
     if (!formRef.current.reportValidity()) {
-        return;
+      return;
     }
-    let validationErrors = [].push(
-      ...validateNewPost(values.title, values.date, data)
-    );
-    setValidationErrors(validationErrors);
-    
-    if (validationErrors.length === 0) {
+    let validationErrs = validateNewPost(values.title, values.date, data);
+    setValidationErrors(validationErrs);
+    if (!validationErrs.length) {
       onSubmit(values);
+      setValues(getEmptyFormValues());
     }
   }
 
@@ -94,3 +88,11 @@ export default function CreatePostModal({
     </div>
   );
 }
+
+// ----------------------------
+
+const getEmptyFormValues = () => 
+  inputNames.reduce(
+    (obj, key) => Object.assign({}, obj, { [key]: '' }),
+    {}
+  );
