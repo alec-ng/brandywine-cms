@@ -35,7 +35,7 @@ export default function LocationMetadata({onChange, values}) {
       <FormInputWrapper>
         Latitude
         <input
-          name="latitude"
+          name="lat"
           type="number"
           required
           onChange={onChange}
@@ -48,7 +48,7 @@ export default function LocationMetadata({onChange, values}) {
       <FormInputWrapper>
         Longitude
         <input
-          name="longitude"
+          name="lng"
           type="number"
           required
           onChange={onChange}
