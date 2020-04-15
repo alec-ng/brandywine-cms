@@ -48,8 +48,8 @@ function App({chosenPost, dispatch, firebase}) {
       {chosenPost != null ? (
         <EditorContainer>
           <Editor
-            postKey={chosenPost.key}
-            postData={chosenPost.cmsPost.postData}
+            postKey={chosenPost.post.postDataId}
+            postData={chosenPost.postData}
             onChange={onEditorChange}
           />
         </EditorContainer>

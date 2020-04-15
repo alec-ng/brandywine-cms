@@ -1,82 +1,42 @@
-import { COLLECTION_TRIPREPORTS, hikingIndexFields } from './constants';
-
+export const ERR_SLUG_NON_UNIQUE = `
+  The slug created from the date and title is not unique. 
+`;
 
 /**
  * Returns case insensitive slug 
  */
 export function getSlug(date, title) {
-  return `${date}-${title}`.toUpperCase();
+  return (!date || !date.trim() || !title || !title.trim())
+    ? null
+    : `${date}-${title}`.toUpperCase();
 }
+
 export function getSlugFromMetadata(metadata) {
   const { date, title } = metadata;
   return getSlug(date, title);
 }
 
+/**
+ * For an existing CMSPost, ensure that if its key has changed,
+ * it's still unique in the dictionary
+ */
+export function validatePostSlug(chosenPost, dataDictionary) {
+  const id = chosenPost.post.postDataId;
+  const storeKey = dataDictionary[id].post.slug;
 
-
-// The post key is unique but separate from the database id
-// Used to generate a nice looking url path consisting of the date and title
-export function generateKey(postDate, postTitle) {
-  return `${postDate}-${postTitle}`;
-}
-export function generateKeyFromPost(post) {
-  return `${post.date}-${post.title}`;
+  return chosenPost.post.slug !== storeKey
+    ? validateSlug(chosenPost.post, Object.values(dataDictionary))
+    : true;
 }
 
 /**
- * Utility function to trim all key values if they are strings
+ * For a PostData instance, ensure its slug is unique among
+ * the existing cms posts
  */
-export function trim(obj) {
-  return Object.keys(obj).reduce((newObj, key) => {
-    const val = typeof(obj[key]) === 'string' 
-      ? obj[key].trim() 
-      : obj[key];
-    return Object.assign({}, newObj, { [key]: val });
-  }, {});
-}
-
-/**
- * Creates a document to insert in the cms-post collection
- * newPostValues should be a key value pairing of post fields 
- */
-export function generateNewCmsPost(newPostValues) {
-  let cmsPost = {};
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, "0");
-  let mm = String(today.getMonth() + 1).padStart(2, "0");
-  let yyyy = today.getFullYear();
-  cmsPost.createdDate = `${yyyy}-${mm}-${dd}`;
-
-  let post = Object.assign({}, newPostValues, {
-    key: generateKey(newPostValues.date, newPostValues.title),
-    isPublished: false,
-  });
-  cmsPost.post = post;
-  cmsPost.postData = {};
-
-  return cmsPost;
-}
-
-/**
- * Creates an an object to insert in the root field of an index specific collection document
- * Contains condensed information about the post for use on home page to save reads
- */
-export function generateIndexEntry(post, id, grouping) {
-  let baseData = {
-    title: post.title,
-    date: post.date,
-    postDataId: id
-  }
-  
-  const reducer = (fields, field) => Object.assign(
-    {}, 
-    fields, 
-    { [field] : post[field] }
+export function validateSlug(metadata, cmsPosts) {
+  const slugList = Object.keys(cmsPosts).map(id =>
+      cmsPosts[id].post.slug
   );
-  switch (grouping) {
-    case COLLECTION_TRIPREPORTS:
-      return Object.assign({}, baseData, hikingIndexFields.reduce(reducer, {}));
-    default:
-      return baseData;
-  }
+  const newSlug = getSlugFromMetadata(metadata)
+  return slugList.indexOf(newSlug) === -1;
 }

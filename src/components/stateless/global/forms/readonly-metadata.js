@@ -27,7 +27,7 @@ export default function ReadonlyMetadata({ cmsPost }) {
         Created
         <input
           style={{ color: "white" }}
-          defaultValue={cmsPost.createdDate}
+          value={cmsPost.createdDate}
           disabled
           readOnly
           className="form-control-plaintext"
@@ -38,7 +38,7 @@ export default function ReadonlyMetadata({ cmsPost }) {
         Last Modified
         <input
           style={{ color: "white" }}
-          defaultValue={lastModifiedStr}
+          value={lastModifiedStr}
           disabled
           readOnly
           className="form-control-plaintext"

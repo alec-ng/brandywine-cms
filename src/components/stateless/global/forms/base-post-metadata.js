@@ -2,8 +2,6 @@ import React from "react";
 import FormInputWrapper from '../../generic/form-input-wrapper';
 import Constants from '../../../../util/constants';
 
-export const inputNames = ['title', 'date', 'grouping'];
-
 /**
  * Renders post properties common to posts across all groupings
  * If a change handler and cmsPost is given, bind them to the inputs
@@ -21,7 +19,7 @@ export default function BasePostMetadata({ onChange, values }) {
           minLength="3"
           maxLength="50"
           pattern="[a-zA-Z0-9\s']+"
-          value={values ? values.title : ''}
+          value={values.title}
           className="form-control"
         />
       </FormInputWrapper>
@@ -32,7 +30,7 @@ export default function BasePostMetadata({ onChange, values }) {
           type="date"
           required
           onChange={onChange}
-          value={values ? values.date : ''}
+          value={values.date}
           className="form-control"
         />
       </FormInputWrapper>
@@ -42,7 +40,7 @@ export default function BasePostMetadata({ onChange, values }) {
           name="grouping"
           onChange={onChange}
           required
-          value={values ? values.grouping : ''}
+          value={values.grouping}
           className="form-control"
         >
           <option value="">--Select an Option--</option>

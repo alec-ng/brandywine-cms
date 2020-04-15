@@ -9,15 +9,8 @@ import {
 
 export const MainReducer = (state = {}, action) => {
   return {
-    data: dataReducer({
-      data: state.data,
-      chosenPost: state.chosenPost,
-    }, action),
-    
-    chosenPost: chosenPostReducer({ 
-      data: state.data,
-      chosenPost: state.chosenPost
-    }, action),
+    data: dataReducer(state, action),
+    chosenPost: chosenPostReducer(state, action),
     showModal: modalReducer(state.showModal, action),
     snackbar: snackbarReducer(state.snackbar, action),
     pending: pendingReducer(state.pending, action),

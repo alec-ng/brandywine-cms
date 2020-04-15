@@ -5,11 +5,10 @@ import promise from 'redux-promise-middleware';
 import { MainReducer } from "./reducers";
 
 export const DefaultState = {
-  // dictionary of firebase id -> cms-post document
+  // dictionary of firebase id -> CMSPost instance
   data: {}, 
-  // object with two properties: {key, cmsPost}
+  // a CMSPost instance
   chosenPost: null, 
-  
   // {type: key of modal to show, payload: object to be passed as props to the modal}
   showModal: null,
   // string with message to populate in snackbar

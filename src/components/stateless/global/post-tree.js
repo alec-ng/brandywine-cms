@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTreeData } from "../../../util/tree-util";
 import TreeView from "./treeview";
 
-export default function PostTree({data, chosenNode, handleNodeSelect}) { 
+export default function PostTree({ data, handleNodeSelect }) { 
   const { treeData, monthKeys, yearKeys } = useTreeData(data);
   const [expandedKeys, setExpandedKeys] = useState([]);
-  const selectedKeys = (chosenNode && chosenNode.key) || [];;
 
   useEffect(() => {
     if (monthKeys && yearKeys) {
@@ -36,7 +35,7 @@ export default function PostTree({data, chosenNode, handleNodeSelect}) {
       treeData={treeData}
       onNodeSelect={onNodeSelect}
       expandedKeys={expandedKeys}
-      selectedKeys={selectedKeys}
+      selectedKeys={[]}
       onExpand={onExpand}
     />
   );

@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { connect } from 'react-redux';
 import { withFirebase } from './../hoc/firebase';
 
-import PostFilterButtons from '../stateless/global/post-filter-buttons';
-import PostTree from '../stateless/global/post-tree';
-import Spinner from '../stateless/generic/spinner';
-
+import CMSPost from '../../types/cms-post';
 import useFilteredData, { ALL_POSTS } from '../../hooks/useFilteredData';
-import { generateNewCmsPost, trim } from "../../util/post-generation";
 import { createPost, GET_ALL_POSTS } from '../../state/actions/data-actions';
 import { selectPost, openModal } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
+
+import PostFilterButtons from '../stateless/global/post-filter-buttons';
+import PostTree from '../stateless/global/post-tree';
+import Spinner from '../stateless/generic/spinner';
 
 /**
  * Container component for grouping level toolbar view
@@ -21,7 +21,6 @@ import { selectPendingStatus } from '../../state/selectors';
  * - create a new post
  */
 function PostManager({
-  chosenPost, 
   data, 
   postsPending, 
   dispatch, 
@@ -42,11 +41,10 @@ function PostManager({
   }
   
   // create a new post
-  function onPostCreate(newPostValues) {
-    const trimmedVals = trim(newPostValues);
-    const newCmsPost = generateNewCmsPost(trimmedVals);
+  function onPostCreate(baseMetadata) {
+    const cmsPost = CMSPost.fromBaseMd(baseMetadata);
     dispatch(
-      createPost(firebase, newCmsPost)
+      createPost(firebase, cmsPost)
     ).catch(err => { console.error(err); })
   }
   function openCreateModal() {
@@ -65,18 +63,14 @@ function PostManager({
         />
       </div>
       <div className="mb-4">
-        {
-          postsPending
-            ? 
-              <div className="text-center">
-                <Spinner />
-              </div>
-            :
-              <PostTree
-                data={filteredData}
-                chosenPost={chosenPost}
-                handleNodeSelect={handleNodeSelect}
-              />     
+        {postsPending 
+          ? <div className="text-center">
+              <Spinner />
+            </div> 
+          : <PostTree
+              data={filteredData}
+              handleNodeSelect={handleNodeSelect}
+            />     
         }
       </div>
       <div className="text-center">
@@ -95,7 +89,6 @@ function PostManager({
 
 const mapStateToProps = (state) => {
   return {
-    chosenPost: state.chosenPost,
     data: state.data,
     postsPending: selectPendingStatus(state, GET_ALL_POSTS)
   }

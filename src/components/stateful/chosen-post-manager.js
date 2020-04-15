@@ -5,15 +5,14 @@ import styled from "styled-components";
 import { withFirebase } from './../hoc/firebase';
 import useHasChanged from '../../hooks/useHasChanged';
 
-import { generateIndexEntry } from '../../util/post-generation';
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
 import { 
   deletePost, publishPost, unpublishPost, savePost, SAVE_CURRENT_POST
 } from '../../state/actions/data-actions';
+import { validatePostSlug } from '../../util/post-generation';
 
 import MetadataForm from "../stateless/global/forms/metadata-form";
-import { validatePost } from "../../util/post-validation";
 import Spinner from "../stateless/generic/spinner";
 
 const BackBtn = styled.button`
@@ -39,10 +38,11 @@ function ChosenPostManager({
 }) {
   
   // Hooks
-  const hasChanged = useHasChanged(chosenPost.cmsPost, data[chosenPost.key]);
+  const dictValue = data[chosenPost.post.postDataId];
+  const hasChanged = useHasChanged(chosenPost, dictValue);
   const formRef = useRef(null);
   // Helpers
-  const isPublished = chosenPost.cmsPost.post.isPublished;
+  const isPublished = chosenPost.post.isPublished;
   const saveButtonAttribues = hasChanged ? {} : { disabled: true };
   
 
@@ -58,9 +58,10 @@ function ChosenPostManager({
       dispatch(openModal('delete', { onDelete: removePost }));
     }
   }
+
   function removePost() {
     dispatch(
-      deletePost(firebase, chosenPost.key, chosenPost.cmsPost.post.title)
+      deletePost(firebase, chosenPost)
     ).catch(err => { console.error(err); });
   };
 
@@ -76,15 +77,16 @@ function ChosenPostManager({
     const confirmationFct = newPublishStatus ? publishConfirm : unpublishConfirm;
     dispatch(openModal(modalType, { onConfirm: confirmationFct }));
   }
+
   function publishConfirm() {
-    const indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key);
     dispatch(
-      publishPost(firebase, chosenPost.key, chosenPost.cmsPost, indexEntry)
+      publishPost(firebase, chosenPost)
     ).catch(err => { console.error(err) });
   }
+  
   function unpublishConfirm() {
     dispatch(
-      unpublishPost(firebase, chosenPost.key, chosenPost.cmsPost)
+      unpublishPost(firebase, chosenPost)
     ).catch(err => { console.error(err) });
   }
 
@@ -95,12 +97,8 @@ function ChosenPostManager({
     if (!validate(isPublished)) {
       return;
     }
-    let indexEntry;
-    if (isPublished) {
-      indexEntry = generateIndexEntry(chosenPost.cmsPost.post, chosenPost.key);
-    }
     dispatch(
-      savePost(firebase, chosenPost.key, chosenPost.cmsPost, indexEntry)
+      savePost(firebase, chosenPost)
     ).then(() => {
       if (closePostAfterCompletion) {
         dispatch(close());
@@ -108,15 +106,26 @@ function ChosenPostManager({
     }).catch(err => { console.error(err) });
   }
 
-  function validate(publishStatus) {
+  /*
+   * Validates HTML form, slug uniqueness, publish logic
+   */
+  function validate(willPublish) {
     if (!formRef.current.reportValidity()) {
       return false;
     }
-    const { valid, validationErrors } = validatePost(data, chosenPost, publishStatus);
-    if (!valid) {
-      if (validationErrors.length > 0) {
-        dispatch(openModal('validationError', {errors: validationErrors}));
-      }
+    
+    const isValidSlug = validatePostSlug(chosenPost, data);
+    let errs = [];
+    
+    if (!isValidSlug) {
+      errs.push('The slug already exists for the given date/title.')
+    }
+    if (willPublish) {
+      errs = errs.concat(chosenPost.publishValidation());
+    }
+
+    if (errs.length) {
+      dispatch(openModal('validationError', {errors: errs}));
       return false;
     }
     return true;
@@ -143,9 +152,7 @@ function ChosenPostManager({
   }
   
   function onMetadataChange(e) {
-    dispatch(
-      updateMetadata(e.currentTarget.name, e.currentTarget.value)
-    )
+    dispatch(updateMetadata(e.target.name, e.target.value));
   }
 
   return (
@@ -158,7 +165,7 @@ function ChosenPostManager({
         <fieldset disabled={savePending}>
           <MetadataForm
             onInputChange={onMetadataChange}
-            cmsPost={chosenPost.cmsPost}
+            cmsPost={chosenPost}
           />
           <div className="my-3">
             <FullWidthBtn

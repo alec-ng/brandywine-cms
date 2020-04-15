@@ -9,7 +9,6 @@ export default function LocationMetadata({onChange, values}) {
         <input
           name="region"
           type="text"
-          required
           pattern="[a-zA-Z0-9\s']+"
           onChange={onChange}
           minLength="3"
@@ -23,7 +22,6 @@ export default function LocationMetadata({onChange, values}) {
         <input
           name="area"
           type="text"
-          required
           pattern="[a-zA-Z0-9\s']+"
           onChange={onChange}
           minLength="3"
@@ -37,10 +35,10 @@ export default function LocationMetadata({onChange, values}) {
         <input
           name="lat"
           type="number"
-          required
           onChange={onChange}
           min="-90"
           max="90"
+          step="0.00001"
           value={values.lat}
           className="form-control"
         />
@@ -50,10 +48,10 @@ export default function LocationMetadata({onChange, values}) {
         <input
           name="lng"
           type="number"
-          required
           onChange={onChange}
           min="-180"
           max="180"
+          step="0.00001"
           value={values.lng}
           className="form-control"
         />

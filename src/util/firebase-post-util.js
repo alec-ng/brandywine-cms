@@ -1,21 +1,31 @@
+import Util from './util';
+
+
+// All methods are async and return promises
+////////////////////////////////////////////////
+
+/**
+ * fetches all cms-post documents and returns a mapping of
+ * return  firebaseId:string -> cmsPost:CMSPost
+ */
 export function getPostDictionary(firebase) {
   return new Promise((resolve, reject) => {
     firebase
       .cmsPosts()
       .get()
       .then(snapshot => { 
-        let mapping = {};
-        snapshot.forEach(doc => {
-          mapping[doc.id] = doc.data();
-        });
-        resolve(mapping); 
+        const dict = snapshot.docs.reduce((mapping, doc) => {
+          mapping[doc.id] = doc.data()
+          return mapping;
+        }, {});
+        resolve(dict);
       })
       .catch(error => { reject(error) });
   });
 }
-
 /**
- * For one post, delete documents in all related collections
+ * removes a document from cms-posts and postData
+ * does not account for published metadata
  */
 export function remove(id, firebase) {
   let batch = firebase.batch();
@@ -34,108 +44,126 @@ export function remove(id, firebase) {
 }
 
 /**
- * Update cms-pots, posts, postData values.
- 
+ * handles publishing (doPublish=true) and unpublishing (doPublish=false) of posts
+ * updates cms-post and post-data documents, updates publishedPosts index
  */
-export function publish(firebase, id, cmsPost, postMetadata) {
-  // TODO: export this logic out
-  let localCmsPost = JSON.parse(JSON.stringify(cmsPost));
-  localCmsPost.post.isPublished = true;
-  localCmsPost.lastModified = firebase.timestamp();
-
-  return new Promise((resolve, reject) => {
-    firebase.runTransaction(transaction => {
-      const publishedPostRef = firebase.publishedPosts();
-      return transaction
-        .get(publishedPostRef)
-        // add the published post to the published post index list
-        .then(root => {
-          let index = root.data().index || [];
-          index.push(postMetadata);
-          transaction.update(publishedPostRef, { index: index });
-        })
-        // update the related cms-post document
-        .then(() => {
-          transaction.update(firebase.cmsPosts().doc(id), localCmsPost);
-        })
-        // update the post-data doucment
-        .then(() => {
-          transaction.update(
-            firebase.postData().doc(id),
-            localCmsPost.postData
-          );
-        })
-        .then(() => {
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
-  });
-}
-
-/**
- 
- * Remove entry from index collection and update cmspost, post, postData
- */
-export function unpublish(firebase, id, cmsPost) {
-  // TODO: extract logic out of this file
-  let localCmsPost = JSON.parse(JSON.stringify(cmsPost));
-  localCmsPost.post.isPublished = false;
-  localCmsPost.lastModified = firebase.timestamp();
-
-  return new Promise((resolve, reject) => {
-    firebase.runTransaction(transaction => {
-      const publishedPostRef = firebase.publishedPosts();
-      return transaction
-        .get(publishedPostRef)
-        // remove the post from the published post index list
-        .then(postIndex => {
-          let index = postIndex.data().index;
-          let indToRemove = index.findIndex(
-            post => post.postDataId === id
-          );
-          index.splice(indToRemove, 1);
-          transaction.update(publishedPostRef, { index: index });
-        })
-        // update the related cms-post document
-        .then(() => {
-          transaction.update(firebase.cmsPosts().doc(id), localCmsPost);
-        })
-        // update the post-data document
-        .then(() => {
-          transaction.update(
-            firebase.postData().doc(id),
-            localCmsPost.postData
-          );
-        })
-        .then(() => {
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
+export function togglePublish(firebase, cmsPost, doPublish) {
+  const publishMd = cmsPost.post.getPublishedSubset();
+  let clone = Util.getObjFromClass(cmsPost);
+  clone.post.isPublished = doPublish;
+  clone.lastModified = firebase.timestamp();
+  
+  return updatePublishedPost(firebase, clone, (index) => {
+    if (doPublish) {
+      index.push(publishMd);
+    } else {
+      const indToRemove = index.findIndex(
+        post => post.postDataId === cmsPost.post.postDataId
+      );
+      index.splice(indToRemove, 1);
+    }
+    return index;
   });
 }
 
 /**
  * Conditional logic whether or not the post is published
  */
-export function update(firebase, id, cmsPost, indexEntry) {
-  // TODO: refactor logic out
-  let localCmsPost = JSON.parse(JSON.stringify(cmsPost));
-  localCmsPost.lastModified = firebase.timestamp();
+export function update(firebase, cmsPost) {
+  const publishMd = cmsPost.post.getPublishedSubset();
+  let clone = Util.getObjFromClass(cmsPost);
+  clone.lastModified = firebase.timestamp();
 
-  return localCmsPost.post.isPublished
-    ? updatePublishedPost(firebase, id, localCmsPost, indexEntry)
-    : updateUnpublishedPost(firebase, id, localCmsPost);
+  if (clone.post.isPublished) {
+    return updatePublishedPost(firebase, clone, (index) => {
+      const indtoUpdate = index.findIndex(
+        post => post.postDataId === cmsPost.post.postDataId
+      );
+      index[indtoUpdate] = publishMd;
+      return index;
+    });
+  } else {
+    return updateUnpublishedPost(firebase, clone)
+  }
 }
+
 /**
- * Batch update documents in above collections 
+ * Creates one document in each of the new collections with shared IDs
  */
-function updateUnpublishedPost(firebase, id, cmsPost) {
+export function insert(firebase, cmsPost) {
+  let writeVal = Util.getObjFromClass(cmsPost);
+
+  return new Promise((resolve, reject) => {
+    let newId;
+    firebase
+      .cmsPosts()
+      .add(writeVal)
+      .then(docRef => {
+        const newId = docRef.id;
+        let batch = firebase.batch();
+        batch.set(firebase.postData().doc(newId), writeVal.postData);
+        writeVal.post.postDataId = newId; // write new id back to document
+        batch.set(docRef, writeVal)
+        batch.commit();
+      })
+      .then(() => {
+        resolve({
+          newId: newId,
+          cmsPost: cmsPost
+        });
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+}
+
+// UTIL
+/////////////////////////////////////////////////
+
+/**
+ * Helper to update all documents related to updating a published post
+ */
+function updatePublishedPost(firebase, cmsPost, updateIndexCb) {
+  const publishedPostRef = firebase.publishedPosts();
+  const id = cmsPost.post.postDataId;
+
+  return new Promise((resolve, reject) => {
+    firebase.runTransaction(transaction => transaction
+      .get(publishedPostRef)
+  
+      // add the published post to the published post index list
+      .then(root => { 
+        const index = root.data().index;
+        const newIndex = updateIndexCb(index);
+        transaction.update(publishedPostRef, { index: newIndex });
+      })
+  
+      // update the related cms-post document
+      .then(() => {
+        transaction.update(
+          firebase.cmsPosts().doc(id), cmsPost
+        );
+      })
+      // update the post-data doucment
+      .then(() => {
+        transaction.update(
+          firebase.postData().doc(id),
+          cmsPost.postData
+        );
+      })
+      .then(() => { resolve(); })
+      .catch(error => { reject(error); })
+    );
+  });
+}
+
+/**
+ * Helper to  batch update all documents related to updating an unpublished post
+ */
+function updateUnpublishedPost(firebase, cmsPost) {
+  const id = cmsPost.post.postDataId;
+
   return new Promise((resolve, reject) => {
     let batch = firebase.batch();
     batch.update(firebase.cmsPosts().doc(id), cmsPost);
@@ -144,71 +172,6 @@ function updateUnpublishedPost(firebase, id, cmsPost) {
       .commit()
       .then(() => {
         resolve();
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
-}
-/**
- * If the post was published, ensure that the index entry matches the most up 
- * to date title/date combo in case it was changed
- */
-function updatePublishedPost(firebase, id, cmsPost, indexEntry) {
-  return new Promise((resolve, reject) => {
-    firebase.runTransaction(transaction => {
-      const publishedPostRef = firebase.publishedPosts();
-      return transaction
-        .get(publishedPostRef)
-        // update relevant entry in published post index list
-        .then(postIndex => {
-          let index = postIndex.data().index;
-          let entryToUpdate = index.findIndex(
-            post => post.postDataId === id
-          );
-          index[entryToUpdate] = indexEntry;
-          transaction.update(publishedPostRef, { index: index });
-        })
-        // update matching cms-post document
-        .then(() => {
-          transaction.update(firebase.cmsPosts().doc(id), cmsPost);
-        })
-        // update post-data document
-        .then(() => {
-          transaction.update(
-            firebase.postData().doc(id), cmsPost.postData
-          );
-        })
-        .then(() => {
-          resolve();
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
-  });
-}
-
-/**
- * Creates one document in each of the new collections with shared IDs
- */
-export function insert(firebase, cmsPost) {
-  return new Promise((resolve, reject) => {
-    let newId;
-    firebase
-      .cmsPosts()
-      .add(cmsPost)
-      .then(docRef => {
-        newId = docRef.id;
-        let batchCreate = firebase.batch();
-        batchCreate.set(firebase.postData().doc(newId), cmsPost.postData);
-        batchCreate.commit();
-      })
-      .then(() => {
-        resolve({
-          newId: newId,
-          cmsPost: cmsPost
-        });
       })
       .catch(error => {
         reject(error);

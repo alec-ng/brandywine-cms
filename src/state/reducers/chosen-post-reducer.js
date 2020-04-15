@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { generateKeyFromPost } from '../../util/post-generation';
+import CMSPost from '../../types/cms-post';
 import { trimFulfilledAction } from './index';
 import {
   CREATE_POST,
@@ -15,51 +15,37 @@ import {
   SELECT_POST,
 } from '../actions';
 
-function deepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
 
-export default function chosenPostReducer({chosenPost = null, data = {}}, action) {
-  const baseActionName = trimFulfilledAction(action.type);
-  let clonedPost = deepClone(chosenPost);
-
-  switch (baseActionName) {
-    case UPDATE_CURRENT_POSTDATA:
-      clonedPost.cmsPost.postData = action.editorData;
-      return clonedPost;
+export default function chosenPostReducer({chosenPost = null, data}, action) {
+  const baseAction = Object.assign({}, action, {
+    type: trimFulfilledAction(action.type)
+  });
+  let clone = chosenPost && CMSPost.fromSelf(chosenPost);
+  
+  switch (baseAction.type) {
+    case UPDATE_CURRENT_POSTDATA: {
+      clone.postData = action.editorData;
+      return clone;
+    }
 
     case UPDATE_CURRENT_POST:
-      let post = clonedPost.cmsPost.post;
-      let newVal = typeof(action.value) === 'string' ? action.value.trim() : action.value;
-      clonedPost.cmsPost.post[action.property] = newVal;
-      clonedPost.cmsPost.post.key = generateKeyFromPost(post);
-      return clonedPost;
+      const newVal = typeof(action.value) === 'string' 
+        ? action.value.trim() : action.value;
+
+      let metadata = clone.post;
+      metadata[action.property] = newVal;
+      return clone;
 
     case SELECT_POST:
-      const cmsPost = data[action.key];
-      const newChosenPost = {
-        key: action.key,
-        cmsPost: deepClone(cmsPost)
-      };
-      return newChosenPost;
-
+      return CMSPost.fromSelf(data[action.key])
+    
     case CREATE_POST:
-      return {
-        key: action.payload.newId,
-        cmsPost: deepClone(action.payload.cmsPost)
-      }  
+      return action.payload.cmsPost;
 
     case SAVE_CURRENT_POST:
-      clonedPost.cmsPost.lastModified = moment();
-      return clonedPost;
-
     case PUBLISH_CURRENT_POST:
-      clonedPost.cmsPost.post.isPublished = true;
-      return clonedPost;
-
     case UNPUBLISH_CURRENT_POST:
-      clonedPost.cmsPost.post.isPublished = false;
-      return clonedPost;
+      return dbSynchronize(chosenPost, baseAction);
 
     case CLOSE_CURRENT_POST:
     case DELETE_POST:
@@ -68,4 +54,17 @@ export default function chosenPostReducer({chosenPost = null, data = {}}, action
     default: 
       return chosenPost;
   }
+}
+
+function dbSynchronize(chosenPost, action) {
+  chosenPost.lastModified = moment();
+
+  if (action.type === UNPUBLISH_CURRENT_POST) {
+    chosenPost.post.isPublished = false;
+  } 
+  if (action.type === PUBLISH_CURRENT_POST) {
+    chosenPost.post.isPublished = true;
+  }
+  
+  return chosenPost;
 }
