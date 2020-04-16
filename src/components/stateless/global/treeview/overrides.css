@@ -1,10 +1,9 @@
 /**
- * Supplement/overwrite rc-tree/assets/index.css styles
- */
-
-/**
  * Overwrite broken/confliting stlyes
  */
+.rc-tree {
+  padding: 0;
+}
 .rc-tree li .rc-tree-node-content-wrapper {
   height: initial;
 }
@@ -31,10 +30,20 @@
 
 .node-motion {
   transition: all 0.3s;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .node-motion-enter,
 .node-motion-leave-active {
   height: 0;
+}
+
+/**
+ * Tree node label wrapping
+ */
+.rc-tree-child-tree-open > li.rc-tree-treenode-switcher-close {
+  white-space: initial;
+}
+.rc-tree li .rc-tree-node-content-wrapper {
+  display: initial;
 }

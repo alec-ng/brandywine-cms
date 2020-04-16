@@ -14,7 +14,7 @@ export default function CreatePostModal({
   open, 
   onClose, 
   onSubmit, 
-  data, 
+  cmsPosts, 
   locked
 }) {  
   const [validationErrors, setValidationErrors] = useState([]);
@@ -42,7 +42,7 @@ export default function CreatePostModal({
     if (!formRef.current.reportValidity()) {
       return;
     }
-    const isValidSlug = validateSlug(baseMetadata, Object.values(data));
+    const isValidSlug = validateSlug(baseMetadata, cmsPosts);
     if (!isValidSlug) {
       setValidationErrors([ERR_SLUG_NON_UNIQUE]);
       return;
