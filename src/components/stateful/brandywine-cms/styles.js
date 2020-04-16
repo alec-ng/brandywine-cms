@@ -1,40 +1,62 @@
 import React from 'react';
 import styled from 'styled-components';
+import clsx from 'clsx';
+import { makeStyles } from "@material-ui/core/styles";
+import { drawerWidth } from '../../stateless/global/sidebar-drawer';
 
-const appbarHeight = '64px';
+
+/*
+ * No Chosen Post View
+ */
+export function EmptyEditor() {
+  return (
+    <EmptyEditorContainer>
+      <h1 className="text-muted">
+        Select a post to begin editing
+      </h1>
+    </EmptyEditorContainer>
+  );
+}
 
 const EmptyEditorContainer = styled.div`
   display: flex;
   text-align: center;
-  height: calc(100vh - ${appbarHeight});
+  height: 100%;
   justify-content: center;
   flex-direction: column;
 `;
 
-export const EmptyEditor = () =>
-  <EmptyEditorContainer>
-      <h1 className="text-muted">
-        In the toolbar, select or create a post to modify its contents here.
-      </h1>
-  </EmptyEditorContainer>
+/*
+ * Shift content for persistent drawer
+ */
+export function MainShiftContainer({ children, open }) {
+  const classes = useStyles();
+  return (
+    <main className={clsx(classes.content, {
+        [classes.contentShift]: open,
+      })}
+    >
+      {children}
+    </main>
+  )
+}
 
-export const ToggleButton = styled.button`
-  padding: 5px 20px;
-  border-radius: 3px;
-  border: 1px solid white;
-  color: white;
-  background: rgba(0, 0, 0, 0);
-`;
+const useStyles = makeStyles((theme) => ({
+  content: {
+    height: '100%',
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: 0,
+  },
+  contentShift: {
+    height: '100%',
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: drawerWidth,
+  },
+}));
 
-export const RootContainer = styled.div`
-  padding-top: ${appbarHeight};
-`;
-
-export const EditorContainer = styled.div`
-  height: calc(100vh - ${appbarHeight});
-  overflow-y: auto;
-`;
-
-export const ToggleVisible = styled.div`
-  display: ${props => (props.show ? "inherit" : "none")};
-`

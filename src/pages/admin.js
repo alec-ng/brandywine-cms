@@ -1,17 +1,18 @@
 import React from "react";
 import { Provider } from 'react-redux';
-
 import { store } from '../state';
 import { withAuthorization } from "../components/hoc/session";
-import BrandywineCMS from '../components/stateful/brandywine-cms';
-
-///////////////////////////////////////////////////
+import CssBaseline from '@material-ui/core/CssBaseline';
+import App from '../components/stateful/brandywine-cms';
 
 const Admin = function() {
   return (
-    <Provider store={store}>
-      <BrandywineCMS />
-    </Provider>
+    <>
+      <CssBaseline />
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </>
   );
 }
 

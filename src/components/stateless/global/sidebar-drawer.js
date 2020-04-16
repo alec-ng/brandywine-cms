@@ -1,28 +1,37 @@
 import React from "react";
-import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
+import Drawer from "@material-ui/core/Drawer";
 
 /**
- * Renders a button that toggles a tempoary draw drawn from the LHS of the screen
+ * Persistent drawer, anchored LHS
  */
-export default function SidebarDrawer({ open, onClose, children }) {
+export default function PersistentDrawer({ open, children }) {
   const classes = useStyles();
   return (
-    <Drawer 
-      open={open} 
-      onClose={onClose} 
-      classes={{ paper: classes.paper }}
+    <Drawer
+      className={classes.drawer}
+      variant="persistent"
+      anchor="left"
+      open={open}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
     >
-      <DrawerContainer>{children}</DrawerContainer>
+      {children}
     </Drawer>
-    
   );  
 }
 
+export const drawerWidth = 325;
+
 const useStyles = makeStyles(() => ({
-  paper: {
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
     display: 'flex',
+  },
+  drawerPaper: {
+    width: drawerWidth,
     "&::-webkit-scrollbar": {
       width: "3px"
     },
@@ -36,12 +45,4 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
-const DrawerContainer = styled.div`
-  background-color: #373a47;
-  min-width: 300px;
-  padding: 20px;
-  flex-grow: 1;
-  color: rgb(184, 183, 173);
-`;
 

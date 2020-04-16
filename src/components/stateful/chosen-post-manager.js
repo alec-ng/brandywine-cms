@@ -16,11 +16,12 @@ import MetadataForm from "../stateless/global/forms/metadata-form";
 import Spinner from "../stateless/generic/spinner";
 
 const BackBtn = styled.button`
+  border: none;
+  position: absolute;
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  color: rgba(255, 255, 255, 0.75);
-  border-radius: 3px;
-  padding: 5px 10px;
+  padding: 0;
+  color: inherit;
+  top: 17px;
 `;
 const FullWidthBtn = styled.button`
   width: 100%;
@@ -157,8 +158,8 @@ function ChosenPostManager({
 
   return (
     <>
-      <BackBtn type="button" className="mb-4" onClick={goBack}>
-        &#8592; Back
+      <BackBtn type="button" onClick={goBack}>
+        &#8592; Posts
       </BackBtn>
 
       <form ref={formRef}>
