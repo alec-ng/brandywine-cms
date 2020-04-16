@@ -11,18 +11,6 @@ const Util = {
   },
 
   /**
-   * Trims all key values if they are strings
-   */
-  trim: function(obj) {
-    return Object.keys(obj).reduce((newObj, key) => {
-      const val = typeof(obj[key]) === 'string' 
-        ? obj[key].trim() 
-        : obj[key];
-      return Object.assign({}, newObj, { [key]: val });
-    }, {});
-  },
-
-  /**
    * Recursively converts a class instance into an object, preserving 
    * only value properties and not its methods
    */
@@ -46,7 +34,7 @@ const Util = {
    * Checks the given object's properties to see if they are falsy or empty strings.
    * Names of invalid props are returned in a list
    */
-  validateNonEmptyProps: function(obj, propList) {
+  validateNonEmptyProps: function(obj, propList = Object.keys(obj)) {
     let invalidPropList = [];
     propList.forEach(prop => {
       if (obj[prop] === null || obj[prop] === undefined) {

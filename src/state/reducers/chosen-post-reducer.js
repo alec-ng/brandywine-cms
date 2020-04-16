@@ -29,11 +29,8 @@ export default function chosenPostReducer({chosenPost = null, data}, action) {
     }
 
     case UPDATE_CURRENT_POST:
-      const newVal = typeof(action.value) === 'string' 
-        ? action.value.trim() : action.value;
-
       let metadata = clone.post;
-      metadata[action.property] = newVal;
+      metadata[action.property] = action.value;
       return clone;
 
     case SELECT_POST:

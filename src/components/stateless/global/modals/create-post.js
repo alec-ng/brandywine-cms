@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { ERR_SLUG_NON_UNIQUE, validateSlug } from '../../../../util/post-generation';
 import { baseMdFactory } from '../../../../types/post-metadata';
+import Util from '../../../../util/util';
 
 import Modal from "../../generic/modal";
 import Spinner from "../../generic/spinner";
 import BaseMetadataForm from '../forms/base-post-metadata';
-
 
 /*
  * Renders a button that opens up a modal to create a new post
@@ -33,7 +33,7 @@ export default function CreatePostModal({
   // controlled form 
   function onInputChange(e) {
     setBaseMetadata(Object.assign({}, baseMetadata, {
-      [e.target.name] : e.target.value.trim()
+      [e.target.name] : e.target.value
     }));
   }
 
@@ -42,8 +42,15 @@ export default function CreatePostModal({
     if (!formRef.current.reportValidity()) {
       return;
     }
-    const isValidSlug = validateSlug(baseMetadata, cmsPosts);
-    if (!isValidSlug) {
+    const invalidPropList = Util.validateNonEmptyProps(baseMetadata);
+    if (invalidPropList.length) {
+      setValidationErrors([
+        `The following fields cannot be empty: ${invalidPropList.join(', ')}`
+      ]);
+      return;
+    }
+
+    if (!validateSlug(baseMetadata, cmsPosts)) {
       setValidationErrors([ERR_SLUG_NON_UNIQUE]);
       return;
     }
