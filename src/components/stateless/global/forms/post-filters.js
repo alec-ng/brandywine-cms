@@ -47,7 +47,13 @@ export default function PostFilters({ filters, setFilters }) {
     <form>
       <div className="input-group input-group-sm mb-3">
         <div className="input-group-prepend">
-          <span className="input-group-text">&#128269;</span>
+          <span 
+            role="img" 
+            aria-label="search"
+            className="input-group-text"
+          >
+            &#128269;
+          </span>
         </div>
         <input 
           type="text" 

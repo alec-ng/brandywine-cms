@@ -32,7 +32,7 @@ function Button({
   onClick,
   label
 }) {
-  let classes = "btn btn-secondary";
+  let classes = "btn btn-sm btn-secondary";
   if (activeKey === buttonKey) {
     classes += " active";
   }
