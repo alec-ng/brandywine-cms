@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ERR_SLUG_NON_UNIQUE, validateSlug } from '../../../../util/post-generation';
 import { baseMdFactory } from '../../../../types/post-metadata';
 import Util from '../../../../util/util';
@@ -22,13 +22,14 @@ export default function CreatePostModal({
   const formRef = useRef();
 
   // reset form values on close, synchronizing timing with fade
-  function onModalClose() {
-    setTimeout(() => {
-      setBaseMetadata(baseMdFactory());
-      setValidationErrors([]);
-    }, 300);
-    onClose(); 
-  }
+  useEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        setBaseMetadata(baseMdFactory());
+        setValidationErrors([]);
+      }, 300);
+    }
+  }, [open]);
 
   // controlled form 
   function onInputChange(e) {
@@ -59,7 +60,7 @@ export default function CreatePostModal({
 
   return (
     <div>
-      <Modal open={open} handleClose={onModalClose} locked={locked}>
+      <Modal open={open} handleClose={onClose} locked={locked}>
 
         <h2>Create a new post</h2>
         <p>
@@ -86,7 +87,7 @@ export default function CreatePostModal({
           <div className="text-right">
             <button
               type="button"
-              onClick={onModalClose}
+              onClick={onClose}
               className="mr-2 btn btn-danger"
             >
               Cancel
