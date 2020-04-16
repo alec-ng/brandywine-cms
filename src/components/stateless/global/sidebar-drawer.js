@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
+
+/**
+ * Renders a button that toggles a tempoary draw drawn from the LHS of the screen
+ */
+export default function SidebarDrawer({ open, onClose, children }) {
+  const classes = useStyles();
+  return (
+    <Drawer 
+      open={open} 
+      onClose={onClose} 
+      classes={{ paper: classes.paper }}
+    >
+      <DrawerContainer>{children}</DrawerContainer>
+    </Drawer>
+    
+  );  
+}
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -28,38 +45,3 @@ const DrawerContainer = styled.div`
   color: rgb(184, 183, 173);
 `;
 
-const ToggleButton = styled.button`
-  padding: 5px 20px;
-  border-radius: 3px;
-  border: 1px solid white;
-  color: white;
-  background: rgba(0, 0, 0, 0);
-`;
-
-/**
- * Renders a button that toggles a tempoary draw drawn from the LHS of the screen
- */
-export default function SidebarDrawer(props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const classes = useStyles();
-  const toggleDrawer = open => event => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setIsOpen(open);
-  };
-
-  return (
-    <div>
-      <ToggleButton type="button" onClick={toggleDrawer(true)}>
-        Open Toolbar
-      </ToggleButton>
-      <Drawer open={isOpen} onClose={toggleDrawer(false)} classes={{ paper: classes.paper }}>
-        <DrawerContainer>{props.children}</DrawerContainer>
-      </Drawer>
-    </div>
-  );
-}
