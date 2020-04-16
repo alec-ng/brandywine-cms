@@ -21,10 +21,13 @@ export default function dataReducer({data = {}, chosenPost}, action) {
     case PUBLISH_CURRENT_POST:
       return updatePost(data, chosenPost, baseAction);
 
-    case CREATE_POST:
+    case CREATE_POST: {
+      let clone = CMSPost.fromSelf(action.payload.cmsPost);
+      clone.post.postDataId = action.payload.newId;
       return Object.assign({}, data, {
-        [action.payload.newId]: action.payload.cmsPost
+        [action.payload.newId]: clone
       });
+    }
 
     case DELETE_POST:
       let clone = Object.assign({}, data);

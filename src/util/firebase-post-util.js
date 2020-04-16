@@ -99,7 +99,7 @@ export function insert(firebase, cmsPost) {
       .cmsPosts()
       .add(writeVal)
       .then(docRef => {
-        const newId = docRef.id;
+        newId = docRef.id;
         let batch = firebase.batch();
         batch.set(firebase.postData().doc(newId), writeVal.postData);
         writeVal.post.postDataId = newId; // write new id back to document
@@ -108,8 +108,8 @@ export function insert(firebase, cmsPost) {
       })
       .then(() => {
         resolve({
-          newId: newId,
-          cmsPost: cmsPost
+          cmsPost: cmsPost,
+          newId: newId
         });
       })
       .catch(error => {
