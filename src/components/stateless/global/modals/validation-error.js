@@ -1,12 +1,11 @@
 import React from 'react';
 import Modal from '../../generic/modal';
 
-export default function ValidationErrorModal({open, errors, onClose}) {
-  if (!errors || errors.length === 0) {
-    return null;
-  }
-
-  const errorList = errors.map((error, i) => <li key={i}>{error}</li>);
+export default function ValidationErrorModal({
+  open, 
+  errors, 
+  onClose
+}) {
   return (
     <Modal open={open} handleClose={onClose}>
       <h2 className="mb-4">Error</h2>
@@ -14,7 +13,11 @@ export default function ValidationErrorModal({open, errors, onClose}) {
         Please fix the following:
       </p>
       <ol>
-        {errorList}
+        { errors && errors.length &&
+          errors.map((error, i) => 
+            <li key={i}>{error}</li>
+          )
+        }
       </ol>
       <div className="text-right">
         <button

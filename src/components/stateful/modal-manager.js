@@ -28,14 +28,19 @@ const modalMap = {
  * and passes any props if supplied.
  * Only supports one modal shown at a time
  */
-function ModalManager({modalToShow, modalPayload, pendingFlags, dispatch}) {
+function ModalManager({
+  modalToShow, 
+  modalPayload, 
+  pendingFlags, 
+  dispatch
+}) {
   const onClose = () => { dispatch(closeModal()); }
   const modalList = Object.keys(modalMap).map(modalKey => {
     let modalProps = {
-      onClose: onClose,
-      open: modalKey === modalToShow,
       key: modalKey,
-      locked: pendingFlags[modalKey] || false
+      open: modalKey === modalToShow,
+      locked: pendingFlags[modalKey] || false,
+      onClose: onClose
     };
     if (modalProps.open) {
       modalProps = {...modalProps, ...modalPayload};
