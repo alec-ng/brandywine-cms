@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import styled from "styled-components";
 
 import { withFirebase } from './../hoc/firebase';
-import useHasChanged from '../../hooks/useHasChanged';
+import usePrevious from '../../hooks/usePrevious';
 import Slug from '../../modules/slug';
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
@@ -38,11 +38,17 @@ function ChosenPostManager({
   firebase
 }) {
   
-  // Hooks
-  const dictValue = data[chosenPost.post.postDataId];
-  const hasChanged = useHasChanged(chosenPost, dictValue);
-  const formRef = useRef(null);
+  // Track if any change has been made
+  const [hasChanged, setHasChanged] = useState(false);
+  const prevChosenPost = usePrevious(chosenPost);
+  useEffect(() => {
+    if (prevChosenPost && !hasChanged) {
+      setHasChanged(true);
+    }
+  }, [chosenPost, prevChosenPost])
+  
   // Helpers
+  const formRef = useRef(null);
   const isPublished = chosenPost.post.isPublished;
   const saveButtonAttribues = hasChanged ? {} : { disabled: true };
   
