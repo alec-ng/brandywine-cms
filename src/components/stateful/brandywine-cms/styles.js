@@ -12,7 +12,7 @@ export function EmptyEditor() {
   return (
     <EmptyEditorContainer>
       <h1 className="text-muted">
-        Select a post to begin editing
+        Select or create a post to begin editing
       </h1>
     </EmptyEditorContainer>
   );

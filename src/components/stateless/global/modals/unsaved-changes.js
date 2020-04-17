@@ -23,7 +23,7 @@ export default function UnsavedChangesModal({
             className="mr-2 btn btn-danger"
             onClick={onExit}
           >
-            Exit Without Saving
+            Discard Changes
           </button>
           <button type="button" className="btn btn-success" onClick={onSave}>
             {locked && <Spinner />} Save and Exit
