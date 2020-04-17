@@ -5,7 +5,7 @@ import Util from '../../../../util/util';
 
 import Modal from "../../generic/modal";
 import Spinner from "../../generic/spinner";
-import BaseMetadataForm from '../forms/base-post-metadata';
+import BaseMetadataForm, {strFieldList} from '../forms/base-post-metadata';
 
 /*
  * Renders a button that opens up a modal to create a new post
@@ -39,22 +39,22 @@ export default function CreatePostModal({
   }
 
   // Validates form values and on success, fires onSubmit cb
+  // assumes onSubmit will close the modal, resetting the form
   function validateAndCreate() {
     if (!formRef.current.reportValidity()) {
       return;
     }
-    const invalidPropList = Util.validateNonEmptyProps(baseMetadata);
-    if (invalidPropList.length) {
-      setValidationErrors([
-        `The following fields cannot be empty: ${invalidPropList.join(', ')}`
-      ]);
+
+    const errs = Util.validateEmptyObject(baseMetadata, strFieldList);
+    if (errs.length) {
+      setValidationErrors(errs);
       return;
     }
-
     if (!validateSlug(baseMetadata, cmsPosts)) {
       setValidationErrors([ERR_SLUG_NON_UNIQUE]);
       return;
     }
+
     onSubmit(baseMetadata);
   }
 

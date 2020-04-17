@@ -6,6 +6,8 @@ import Constants from '../../../../util/constants';
  * Renders post properties common to posts across all groupings
  * If a change handler and cmsPost is given, bind them to the inputs
  */
+export const strFieldList = ['title', 'date', 'grouping']
+
 export default function BasePostMetadata({ onChange, values }) {
   return (
     <>

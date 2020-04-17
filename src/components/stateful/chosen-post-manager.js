@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { withFirebase } from './../hoc/firebase';
 import useHasChanged from '../../hooks/useHasChanged';
+import Util from '../../util/util';
 
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
@@ -115,14 +116,16 @@ function ChosenPostManager({
       return false;
     }
     
-    const isValidSlug = validatePostSlug(chosenPost, data);
-    let errs = [];
-    
-    if (!isValidSlug) {
-      errs.push('The slug already exists for the given date/title.')
-    }
-    if (willPublish) {
-      errs = errs.concat(chosenPost.publishValidation());
+    // Basic empty check before specialized validation logic
+    let errs = chosenPost.post.validateBaseProps();
+    if (!errs.length) {
+      const isValidSlug = validatePostSlug(chosenPost, data);
+      if (!isValidSlug) {
+        errs.push('The slug already exists for the given date/title.')
+      }
+      if (willPublish) {
+        errs = errs.concat(chosenPost.publishValidation());
+      }
     }
 
     if (errs.length) {

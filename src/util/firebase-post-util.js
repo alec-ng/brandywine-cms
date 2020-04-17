@@ -48,7 +48,7 @@ export function remove(id, firebase) {
  * updates cms-post and post-data documents, updates publishedPosts index
  */
 export function togglePublish(firebase, cmsPost, doPublish) {
-  const publishMd = cmsPost.post.getPublishedSubset();
+  const publishMd = cmsPost.post.publishedSubset;
   let clone = Util.getObjFromClass(cmsPost);
   clone.post.isPublished = doPublish;
   clone.lastModified = firebase.timestamp();
@@ -70,7 +70,7 @@ export function togglePublish(firebase, cmsPost, doPublish) {
  * Conditional logic whether or not the post is published
  */
 export function update(firebase, cmsPost) {
-  const publishMd = cmsPost.post.getPublishedSubset();
+  const publishMd = cmsPost.post.publishedSubset;
   let clone = Util.getObjFromClass(cmsPost);
   clone.lastModified = firebase.timestamp();
 

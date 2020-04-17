@@ -43,7 +43,7 @@ export default class CMSPost {
     let errs = [];
 
     // Post Metadata specific validation
-    errs = errs.concat(this.post.publishValidation());
+    errs = errs.concat(this.post.validateAllProps());
     
     // post must contain at least a title and one block
     if (!this.postData) {

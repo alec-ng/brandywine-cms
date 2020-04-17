@@ -19,8 +19,29 @@ export default class PostMetadata {
   // Publish metadata
   isPublished = false; // boolean 
   postDataId = null; // ?string;
+
+  // unique key for url id
   get slug() {
     return getSlugFromMetadata(this);
+  }
+
+  // returns a clone with typecasted propety values
+  get typedcastedSelf() {
+    let clone = PostMetadata.fromSelf(this);
+    clone.lat = clone.lat && parseFloat(clone.lat);
+    clone.lng = clone.lng && parseFloat(clone.lng);
+    return clone;
+  }
+
+  // gets typecasted metadata properties of this instance
+  get publishedSubset() {
+    let obj = Object.assign({}, this.typedcastedSelf);
+    // HOTFIX: safeguard against saving deprecated "key" field
+    if (obj.key) {
+      delete obj.key;
+    }
+    delete obj.isPublished;
+    return obj;
   }
 
   /**
@@ -43,35 +64,41 @@ export default class PostMetadata {
     return Object.assign(new PostMetadata(), obj);
   }
 
-  /**
-   * Ensures all properties are non null for publishing 
-   */
-  publishValidation() {
-    const propList = Object.keys(this);
-    const invalidProps = Util.validateNonEmptyProps(this, propList);
-    return invalidProps.length
-      ? [`The following properties are missing: ${invalidProps.join(', ')}`]
-      : [];
+  validateAllProps() {
+    return Util.validateEmptyObject(this.publishedSubset, stringFields);
   }
 
-  /**
-   * returns the instance as an object with the minimal subset of information 
-   * needed to represent a published post
-   */
-  getPublishedSubset() {
-    let obj = Object.assign({}, this);
-    // HOTFIX: safeguard against saving deprecated "key" field
-    if (obj.key) {
-      delete obj.key;
-    }
-    // TODO: remove key field?
-    delete obj.isPublished;
-    return obj;
+  validateBaseProps() {
+    const baseStrFields = stringFields.filter(
+      field => !locationMdFields.includes(field)
+    );
+    let baseFields = Object.assign({}, this);
+    locationMdFields.forEach(locationField => {
+      delete baseFields[locationField];
+    });
+
+    return Util.validateEmptyObject(baseFields, baseStrFields);
   }
 
 }
 
 // ---------------- UTIL
+
+const stringFields = [
+  'title',
+  'date',
+  'grouping',
+  'area',
+  'region',
+  'postDataId'
+];
+
+const locationMdFields = [
+  'region',
+  'area',
+  'lat',
+  'lng'
+];
 
 export const baseMdFactory = () => ({
   title: '',
