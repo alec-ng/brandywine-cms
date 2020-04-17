@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ERR_SLUG_NON_UNIQUE, validateSlug } from '../../../../util/post-generation';
 import { baseMdFactory } from '../../../../types/post-metadata';
-import Util from '../../../../util/util';
+import Util from '../../../../modules/util';
+import Slug from '../../../../modules/slug';
 
 import Modal from "../../generic/modal";
 import Spinner from "../../generic/spinner";
@@ -50,8 +50,8 @@ export default function CreatePostModal({
       setValidationErrors(errs);
       return;
     }
-    if (!validateSlug(baseMetadata, cmsPosts)) {
-      setValidationErrors([ERR_SLUG_NON_UNIQUE]);
+    if (!Slug.validateUnique(baseMetadata, cmsPosts)) {
+      setValidationErrors([Slug.ERR_SLUG_NON_UNIQUE]);
       return;
     }
 

@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import clsx from 'clsx';
 import { makeStyles } from "@material-ui/core/styles";
-import { drawerWidth } from '../../stateless/global/sidebar-drawer';
-
+import { drawerWidth } from '../../stateless/global/layout/sidebar-drawer';
 
 /*
  * No Chosen Post View

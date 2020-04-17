@@ -4,14 +4,13 @@ import styled from "styled-components";
 
 import { withFirebase } from './../hoc/firebase';
 import useHasChanged from '../../hooks/useHasChanged';
-import Util from '../../util/util';
-
+import Slug from '../../modules/slug';
 import { openModal, closeModal, updateMetadata, close } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
 import { 
   deletePost, publishPost, unpublishPost, savePost, SAVE_CURRENT_POST
-} from '../../state/actions/data-actions';
-import { validatePostSlug } from '../../util/post-generation';
+} from '../../state/actions/async-actions';
+
 
 import MetadataForm from "../stateless/global/forms/metadata-form";
 import Spinner from "../stateless/generic/spinner";
@@ -119,7 +118,7 @@ function ChosenPostManager({
     // Basic empty check before specialized validation logic
     let errs = chosenPost.post.validateBaseProps();
     if (!errs.length) {
-      const isValidSlug = validatePostSlug(chosenPost, data);
+      const isValidSlug = Slug.validateUniqueAndChanged(chosenPost, data);
       if (!isValidSlug) {
         errs.push('The slug already exists for the given date/title.')
       }

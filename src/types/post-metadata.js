@@ -1,5 +1,5 @@
-import { getSlugFromMetadata } from "../util/post-generation";
-import Util from '../util/util';
+import Slug from "../modules/slug";
+import Util from '../modules/util';
 
 /**
  * All post data not related to the actual content
@@ -22,7 +22,7 @@ export default class PostMetadata {
 
   // unique key for url id
   get slug() {
-    return getSlugFromMetadata(this);
+    return Slug.createFromMetadata(this);
   }
 
   // returns a clone with typecasted propety values

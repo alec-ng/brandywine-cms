@@ -8,7 +8,7 @@ import {
   PUBLISH_CURRENT_POST,
   UNPUBLISH_CURRENT_POST,
   GET_ALL_POSTS,
-} from '../actions/data-actions';
+} from '../actions/async-actions';
 
 export default function dataReducer({data = {}, chosenPost}, action) {
   const baseAction = Object.assign({}, action, {

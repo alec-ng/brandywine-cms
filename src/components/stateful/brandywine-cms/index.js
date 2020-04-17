@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { withFirebase } from '../../hoc/firebase';
 import { connect } from 'react-redux';
 import { updatePost } from '../../../state/actions';
-import { getPosts } from '../../../state/actions/data-actions';
+import { getPosts } from '../../../state/actions/async-actions';
 
-import Header from "../../stateless/global/header";
-import Editor from '../../stateless/global/brandywine-editor';
-import Sidebar from '../../stateless/global/sidebar';
-import PersistentDrawer from "../../stateless/global/sidebar-drawer";
 import ModalManager from './../modal-manager';
 import SnackbarManager from './../snackbar-manager';
+import Header from "../../stateless/global/layout/header";
+import Sidebar from '../../stateless/global/layout/sidebar';
+import PersistentDrawer from "../../stateless/global/layout/sidebar-drawer";
+import Editor from '../../stateless/global/brandywine-editor';
 import { EmptyEditor, MainShiftContainer } from './styles';
 
 /**

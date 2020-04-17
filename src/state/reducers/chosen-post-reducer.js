@@ -7,7 +7,7 @@ import {
   SAVE_CURRENT_POST,
   PUBLISH_CURRENT_POST,
   UNPUBLISH_CURRENT_POST,
-} from '../actions/data-actions';
+} from '../actions/async-actions';
 import {
   UPDATE_CURRENT_POSTDATA,
   UPDATE_CURRENT_POST,

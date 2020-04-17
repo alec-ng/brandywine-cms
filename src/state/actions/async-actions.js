@@ -1,12 +1,5 @@
-import {
-  getPostDictionary,
-  remove,
-  togglePublish,
-  update,
-  insert
-} from '../../util/firebase-post-util';
-
-import { showSnackbar, closeModal } from '../actions';
+import FirestoreAPI from '../../modules/firestore-api';
+import { showSnackbar, closeModal } from '.';
 import { getSnackbarMessage } from '../../components/stateful/snackbar-manager';
 
 /**
@@ -19,7 +12,7 @@ export function createPost(firebase, cmsPost) {
   return dispatch => {
     return dispatch({
       type: CREATE_POST,
-      payload: insert(firebase, cmsPost)
+      payload: FirestoreAPI.insert(firebase, cmsPost)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("create", cmsPost.post.title)
@@ -34,7 +27,7 @@ export function deletePost(firebase, cmsPost) {
   return dispatch => {
     return dispatch({
       type: DELETE_POST,
-      payload: remove(cmsPost.post.postDataId, firebase)
+      payload: FirestoreAPI.remove(cmsPost.post.postDataId, firebase)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("delete", cmsPost.post.title)
@@ -49,7 +42,7 @@ export function savePost(firebase, cmsPost) {
   return dispatch => {
     return dispatch({
       type: SAVE_CURRENT_POST,
-      payload: update(firebase, cmsPost)
+      payload: FirestoreAPI.update(firebase, cmsPost)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("update", cmsPost.post.title)
@@ -64,7 +57,7 @@ export function publishPost(firebase, cmsPost) {
   return dispatch => {
     return dispatch({
       type: PUBLISH_CURRENT_POST,
-      payload: togglePublish(firebase, cmsPost, true)
+      payload: FirestoreAPI.togglePublish(firebase, cmsPost, true)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("publish", cmsPost.post.title)
@@ -79,7 +72,7 @@ export function unpublishPost(firebase, cmsPost) {
   return dispatch => {
     return dispatch({
       type: UNPUBLISH_CURRENT_POST,
-      payload: togglePublish(firebase, cmsPost, false)
+      payload: FirestoreAPI.togglePublish(firebase, cmsPost, false)
     }).then(() => {
       dispatch(showSnackbar(
         getSnackbarMessage("unpublish", cmsPost.post.title)
@@ -94,8 +87,7 @@ export function getPosts(firebase) {
   return dispatch => {
     dispatch({
       type: GET_ALL_POSTS,
-      payload: getPostDictionary(firebase)
+      payload: FirestoreAPI.getPostDictionary(firebase)
     });
   }
 }
-

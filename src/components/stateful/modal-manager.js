@@ -4,7 +4,7 @@ import { closeModal } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
 import { 
   CREATE_POST, DELETE_POST, PUBLISH_CURRENT_POST, UNPUBLISH_CURRENT_POST, SAVE_CURRENT_POST 
-} from '../../state/actions/data-actions';
+} from '../../state/actions/async-actions';
 
 import CreatePostModal from '../stateless/global/modals/create-post';
 import DeletePostModal from '../stateless/global/modals/delete-post';

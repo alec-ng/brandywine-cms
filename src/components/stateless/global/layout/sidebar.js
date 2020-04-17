@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import PostManager from "../../stateful/post-manager";
-import ChosenPostManager from "../../stateful/chosen-post-manager";
+import PostManager from "../../../stateful/post-manager";
+import ChosenPostManager from "../../../stateful/chosen-post-manager";
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { ToggleVisible } from '../generic/util';
+import { ToggleVisible } from '../../generic/util';
 
 /**
  * Controls rendering of sidebar content and provides control

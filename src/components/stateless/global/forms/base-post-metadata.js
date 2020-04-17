@@ -1,6 +1,6 @@
 import React from "react";
 import FormInputWrapper from '../../generic/form-input-wrapper';
-import Constants from '../../../../util/constants';
+import Constants from '../../../../modules/constants';
 
 /**
  * Renders post properties common to posts across all groupings

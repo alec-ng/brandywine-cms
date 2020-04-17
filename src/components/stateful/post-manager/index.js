@@ -4,7 +4,7 @@ import { withFirebase } from './../../hoc/firebase';
 import filterPosts from './filter-posts';
 
 import CMSPost from '../../../types/cms-post';
-import { createPost, GET_ALL_POSTS } from '../../../state/actions/data-actions';
+import { createPost, GET_ALL_POSTS } from '../../../state/actions/async-actions';
 import { selectPost, openModal } from '../../../state/actions';
 import { selectPendingStatus } from '../../../state/selectors';
 

@@ -1,14 +1,18 @@
 import PostMetadata from './post-metadata';
-import Util from '../util/util';
+import Util from '../modules/util';
 
 /**
  * Top level collection storing all post related data
  */
 export default class CMSPost {
-  createdDate = Util.getCurrDateStr(); // string, YYYY-MM-DD
-  lastModified;  // object, firebase or moment timestamp
-  post; // PostMetadata class
-  postData = {}; // brandywine editor data
+  // string, YYYY-MM-DD
+  createdDate = Util.getCurrDateStr(); 
+  // object, firebase or moment timestamp
+  lastModified;  
+  // PostMetadata class
+  post; 
+  // brandywine editor data
+  postData = {}; 
 
   /**
    * static creation methods instead of constructor
@@ -63,5 +67,4 @@ export default class CMSPost {
 
     return errs;
   }
-
 }
