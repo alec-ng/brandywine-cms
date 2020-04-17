@@ -1,24 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import { openModal, closeModal, close } from '../../../state/actions';
+import { openModal, closeModal, close } from "../../../state/actions";
 
 /**
  * Encapsulated exit functionality
  */
-export default function PublishControl({ 
-  dispatch, 
-  save,
-  hasChanged
-}) {
+export default function PublishControl({ dispatch, save, hasChanged }) {
   function goBack() {
     if (!hasChanged) {
       dispatch(close());
     } else {
-      const onSaveAndClose = () => { save(true) }
-      dispatch(openModal('unsavedChanges', {
-        onExit: closeCurrentPost,
-        onSave: onSaveAndClose  
-      }));
+      const onSaveAndClose = () => {
+        save(true);
+      };
+      dispatch(
+        openModal("unsavedChanges", {
+          onExit: closeCurrentPost,
+          onSave: onSaveAndClose
+        })
+      );
     }
   }
 
@@ -32,7 +32,6 @@ export default function PublishControl({
       &#8592; Posts
     </BackBtn>
   );
-
 }
 
 const BackBtn = styled.button`
@@ -41,5 +40,5 @@ const BackBtn = styled.button`
   background: none;
   padding: 0;
   color: inherit;
-  top: 17px;
+  top: 1.6%;
 `;
