@@ -1,35 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { withFirebase } from '../../hoc/firebase';
-import { connect } from 'react-redux';
-import { updatePost } from '../../../state/actions';
-import { getPosts } from '../../../state/actions/async-actions';
+import { withFirebase } from "../../hoc/firebase";
+import { connect } from "react-redux";
+import { updatePost } from "../../../state/actions";
+import { getPosts } from "../../../state/actions/async-actions";
 
-import ModalManager from './../modal-manager';
-import SnackbarManager from './../snackbar-manager';
+import ModalManager from "./../modal-manager";
+import SnackbarManager from "./../snackbar-manager";
 import Header from "../../stateless/global/layout/header";
-import Sidebar from '../../stateless/global/layout/sidebar';
+import Sidebar from "../../stateless/global/layout/sidebar";
 import PersistentDrawer from "../../stateless/global/layout/sidebar-drawer";
-import Editor from '../../stateless/global/brandywine-editor';
-import { EmptyEditor, MainShiftContainer } from './styles';
+import Editor from "../../stateless/global/brandywine-editor";
+import { EmptyEditor, MainShiftContainer } from "./styles";
 
 /**
  * Top level app composition container component
  */
-function App({chosenPost, dispatch, firebase}) {
+function App({ chosenPost, dispatch, firebase }) {
   // One time initial load to get all published posts
+  const [postsDispatched, setPostDispatched] = useState(false);
   useEffect(() => {
-    dispatch(getPosts(firebase));
-  }, [])
+    if (dispatch && firebase && !postsDispatched) {
+      dispatch(getPosts(firebase));
+      setPostDispatched(true);
+    }
+  }, [firebase, dispatch, postsDispatched]);
 
   // Controlled drawer state
   const [drawerOpen, toggleDrawer] = useState(true);
-  
+
   // Synchronize editor changes with store
   function onEditorChange(header, blocks) {
-    dispatch(updatePost({
-      header: header,
-      blocks: blocks
-    }));
+    dispatch(
+      updatePost({
+        header: header,
+        blocks: blocks
+      })
+    );
   }
 
   return (
@@ -37,20 +43,17 @@ function App({chosenPost, dispatch, firebase}) {
       {/* Global UI Components */}
       <ModalManager />
       <SnackbarManager />
-      
+
       {/* Persistent Drawer */}
       <PersistentDrawer open={drawerOpen}>
-        <Sidebar 
+        <Sidebar
           isPostChosen={chosenPost !== null}
           toggleDrawer={toggleDrawer}
         />
       </PersistentDrawer>
 
       {/* Main Content */}
-      <Header
-        drawerOpen={drawerOpen}
-        toggleDrawer={toggleDrawer}
-      />
+      <Header drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
       <MainShiftContainer open={drawerOpen}>
         {chosenPost != null ? (
           <Editor
@@ -67,5 +70,5 @@ function App({chosenPost, dispatch, firebase}) {
 }
 const mapStateToProps = state => ({
   chosenPost: state.chosenPost
-}); 
+});
 export default connect(mapStateToProps)(withFirebase(App));
