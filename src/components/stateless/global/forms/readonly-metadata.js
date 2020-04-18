@@ -1,15 +1,14 @@
 import React from "react";
 import moment from "moment";
-import FormInputWrapper from '../../universal/form-input-wrapper';
-import { collectionLabelMap } from '../../../../util/constants';
+import FormInputWrapper from '../../generic/form-input-wrapper';
 
 const datetimeFormat = "YYYY-MM-DD h:mm a";
 
 /**
  * Renders readonly inputs for post properties that cannot be modified by the user
  */
-export default function ReadonlyMetadata({cmsPost, grouping}) {
-  let lastModified = cmsPost.lastModified;
+export default function ReadonlyMetadata({ cmsPost }) {
+  const lastModified = cmsPost.lastModified;
   let lastModifiedStr;
   if (!lastModified) {
     lastModifiedStr = "N/A";
@@ -22,26 +21,13 @@ export default function ReadonlyMetadata({cmsPost, grouping}) {
       : moment.unix(lastModified.seconds).format(datetimeFormat); // firestore value
   }
 
-  const collectionLabel = collectionLabelMap[grouping];
-
   return (
     <>
-    <FormInputWrapper>
-        Collection
-        <input
-          style={{ color: "white" }}
-          defaultValue={collectionLabel}
-          disabled
-          readOnly
-          className="form-control-plaintext"
-          type="text"
-        />
-      </FormInputWrapper>
       <FormInputWrapper>
         Created
         <input
           style={{ color: "white" }}
-          defaultValue={cmsPost.createdDate}
+          value={cmsPost.createdDate}
           disabled
           readOnly
           className="form-control-plaintext"
@@ -52,7 +38,7 @@ export default function ReadonlyMetadata({cmsPost, grouping}) {
         Last Modified
         <input
           style={{ color: "white" }}
-          defaultValue={lastModifiedStr}
+          value={lastModifiedStr}
           disabled
           readOnly
           className="form-control-plaintext"

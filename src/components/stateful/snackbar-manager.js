@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { closeSnackbar } from '../../state/actions';
-import Snackbar from '../stateless/universal/snackbar';
+import Snackbar from '../stateless/generic/snackbar';
 
 export function getSnackbarMessage(action, title) {
   switch (action) {

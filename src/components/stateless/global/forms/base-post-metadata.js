@@ -1,37 +1,60 @@
 import React from "react";
-import FormInputWrapper from '../../universal/form-input-wrapper';
+import FormInputWrapper from '../../generic/form-input-wrapper';
+import Constants from '../../../../modules/constants';
 
 /**
  * Renders post properties common to posts across all groupings
  * If a change handler and cmsPost is given, bind them to the inputs
  */
-export default function BasePostMetadata({onChange, cmsPost}) {
+export const strFieldList = ['title', 'date', 'grouping']
+
+export default function BasePostMetadata({ onChange, values }) {
   return (
     <>
       <FormInputWrapper>
         Title
         <input
+          name="title"
+          type="text"
           required
           onChange={onChange}
           minLength="3"
           maxLength="50"
-          data-val="title"
           pattern="[a-zA-Z0-9\s']+"
-          type="text"
-          defaultValue={cmsPost ? cmsPost.post.title : null}
+          value={values.title}
           className="form-control"
         />
       </FormInputWrapper>
       <FormInputWrapper>
         Date
         <input
-          defaultValue={cmsPost ? cmsPost.post.date : null}
+          name="date"
+          type="date"
+          required
+          onChange={onChange}
+          value={values.date}
+          className="form-control"
+        />
+      </FormInputWrapper>
+      <FormInputWrapper>
+        Grouping
+        <select 
+          name="grouping"
           onChange={onChange}
           required
+          value={values.grouping}
           className="form-control"
-          type="date"
-          data-val="date"
-        />
+        >
+          <option value="">--Select an Option--</option>
+          {
+            Object.keys(Constants.POST_GROUPINGS).map(
+              key => 
+                <option key={key}>
+                  {Constants.POST_GROUPINGS[key]}
+                </option>
+            )
+          }
+        </select>
       </FormInputWrapper>
     </>
   );

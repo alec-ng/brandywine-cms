@@ -1,8 +1,14 @@
 import React from 'react';
-import Modal from '../../universal/modal';
-import Spinner from '../../universal/spinner';
+import Modal from '../../generic/modal';
+import Spinner from '../../generic/spinner';
 
-export default function UnsavedChangesModal({open, onClose, locked, onExit, onSave}) {
+export default function UnsavedChangesModal({
+  open, 
+  locked, 
+  onClose, 
+  onExit, 
+  onSave}) 
+{
   return (
     <Modal open={open} handleClose={onClose} locked={locked}>
       <h2>Save and Exit</h2>
@@ -17,7 +23,7 @@ export default function UnsavedChangesModal({open, onClose, locked, onExit, onSa
             className="mr-2 btn btn-danger"
             onClick={onExit}
           >
-            Exit Without Saving
+            Discard Changes
           </button>
           <button type="button" className="btn btn-success" onClick={onSave}>
             {locked && <Spinner />} Save and Exit

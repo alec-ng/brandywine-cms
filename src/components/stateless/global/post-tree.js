@@ -1,24 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useTreeData } from "../../../util/tree-util";
-import TreeView from "../universal/treeview";
+import React, { useState, useEffect, useMemo } from 'react';
+import { Treeview, createTreeData } from "./treeview";
 
-export default function PostTree({data, chosenNode, handleNodeSelect}) { 
-  const { treeData, monthKeys, yearKeys } = useTreeData(data);
+/**
+ * Controlled rc-tree instance
+ */
+export default function PostTree({ 
+  isFiltered,
+  cmsPosts, 
+  handleNodeSelect 
+}) { 
   const [expandedKeys, setExpandedKeys] = useState([]);
-  const selectedKeys = (chosenNode && chosenNode.key) || [];;
+  const { treeData, monthKeys, yearKeys } = useMemo(
+    () => createTreeData(cmsPosts),
+    [cmsPosts]
+  );
 
+  /**
+   * If data is filtered, auto expand all keys
+   */
   useEffect(() => {
-    if (monthKeys && yearKeys) {
+    if (monthKeys && yearKeys && isFiltered) {
       setExpandedKeys(monthKeys.concat(yearKeys));
+    } else {
+      setExpandedKeys([]);
     }
-  }, [monthKeys, yearKeys])
+  }, [monthKeys, yearKeys, isFiltered])
   
-  // If leaf, update seleted post state
-  // If not a leaf, expand and show its children
+  /**
+   * If leaf, update seleted post state
+   * If not a leaf, expand and show its children
+   */
   function onNodeSelect(selectedKeys, e) {
     if (e.node.isLeaf()) {
-      const postKey = e.node.props.eventKey;
-      handleNodeSelect(postKey);
+      const postId = e.node.props.eventKey;
+      handleNodeSelect(postId);
     } else {
       setExpandedKeys(
         e.node.props.expanded
@@ -27,18 +42,23 @@ export default function PostTree({data, chosenNode, handleNodeSelect}) {
       );
     }
   }
+  
   function onExpand(expandedKeys) {
     setExpandedKeys(expandedKeys);
   }
 
   return (
-    <TreeView
-      treeData={treeData}
-      onNodeSelect={onNodeSelect}
-      expandedKeys={expandedKeys}
-      selectedKeys={selectedKeys}
-      onExpand={onExpand}
-    />
+    <>
+      <div className="mb-2">
+        Total: {cmsPosts.length}
+      </div>
+      <Treeview
+        treeData={treeData}
+        onNodeSelect={onNodeSelect}
+        expandedKeys={expandedKeys}
+        selectedKeys={[]}
+        onExpand={onExpand}
+      />
+    </>
   );
-
 }

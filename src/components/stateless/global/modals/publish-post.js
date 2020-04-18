@@ -1,6 +1,6 @@
 import React from 'react';
-import Modal from '../../universal/modal';
-import Spinner from '../../universal/spinner';
+import Modal from '../../generic/modal';
+import Spinner from '../../generic/spinner';
 
 export default function PublishModal({open, onClose, locked, onConfirm}) {
   return (

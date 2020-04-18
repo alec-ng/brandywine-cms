@@ -1,7 +1,10 @@
 import React from "react";
 
-// bootstrap style spinner, meant to be used in the body of a button of class btn
-export default function Spinner(props) {
+/*
+ * Bootstrap style spinner
+ * Use as content for a button of class btn
+ */ 
+export default function Spinner() {
   return (
     <div
       className="spinner-border spinner-border-sm"

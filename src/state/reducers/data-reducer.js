@@ -1,66 +1,67 @@
 import moment from 'moment';
 import { trimFulfilledAction } from './index';
+import CMSPost from '../../types/cms-post';
 import {
   CREATE_POST,
   DELETE_POST,
   SAVE_CURRENT_POST,
   PUBLISH_CURRENT_POST,
   UNPUBLISH_CURRENT_POST,
-  SET_GROUPING,
-} from '../actions/data-actions';
+  GET_ALL_POSTS,
+} from '../actions/async-actions';
 
+export default function dataReducer({data = {}, chosenPost}, action) {
+  const baseAction = Object.assign({}, action, {
+    type: trimFulfilledAction(action.type)
+  });
 
-function deepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
+  switch (baseAction.type) {
+    case SAVE_CURRENT_POST:
+    case UNPUBLISH_CURRENT_POST:
+    case PUBLISH_CURRENT_POST:
+      return updatePost(data, chosenPost, baseAction);
 
-export default function dataReducer({data = {}, chosenPost = null, postGroup = null}, action) {
-  const baseActionName = trimFulfilledAction(action.type);
-  const dataPostGroupSlice = data[postGroup];
-  let mergePost = {};
-  let clonedChosenPost = deepClone(chosenPost);
-
-  function mergeDataSlice(postGroupSlice) {
-    let slice = {};
-    slice[postGroup] = postGroupSlice;
-    return Object.assign({}, data, slice);
-  }
-
-  switch (baseActionName) {
-    case CREATE_POST:
-      let newPost = {};
-      newPost[action.payload.newId] = deepClone(action.payload.cmsPost);
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, newPost));
+    case CREATE_POST: {
+      let clone = CMSPost.fromSelf(action.payload.cmsPost);
+      clone.post.postDataId = action.payload.newId;
+      return Object.assign({}, data, {
+        [action.payload.newId]: clone
+      });
+    }
 
     case DELETE_POST:
-      let clonedData = deepClone(dataPostGroupSlice);
-      delete clonedData[action.payload.id];
-      return mergeDataSlice(clonedData);
-    
-    case SAVE_CURRENT_POST:
-      clonedChosenPost.cmsPost.lastModified = moment();
-      mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
-    
-    case UNPUBLISH_CURRENT_POST:
-      clonedChosenPost.cmsPost.post.isPublished = false;
-      mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
-    
-    case PUBLISH_CURRENT_POST:
-      clonedChosenPost.cmsPost.post.isPublished = true;
-      mergePost[chosenPost.key] = clonedChosenPost.cmsPost;
-      return mergeDataSlice(Object.assign({}, dataPostGroupSlice, mergePost));
+      let clone = Object.assign({}, data);
+      delete clone[action.payload.id];
+      return clone;
 
-    case SET_GROUPING:
-      if (data[action.payload.grouping]) {
-        return data;
-      }
-      let newData = {};
-      newData[action.payload.grouping] = action.payload.data;
-      return Object.assign({}, data, newData);
-
+    // convert obj data to CMSPost instances
+    case GET_ALL_POSTS:
+      return Object.keys(action.payload).reduce((data, postId) => {
+        // HOTFIX: retroactively populate postDataId field on metadata
+        let cmsPost = CMSPost.fromObject(action.payload[postId])
+        cmsPost.post.postDataId = postId;
+        return Object.assign({}, data, {
+          [postId]: cmsPost
+        });
+      }, {});
+    
     default:
       return data;
   }
+}
+
+function updatePost(data, chosenPost, action) {
+  let clone = CMSPost.fromSelf(chosenPost);
+  clone.lastModified = moment();
+  
+  if (action.type === UNPUBLISH_CURRENT_POST) {
+    clone.post.isPublished = false;
+  } 
+  if (action.type === PUBLISH_CURRENT_POST) {
+    clone.post.isPublished = true;
+  } 
+
+  return Object.assign({}, data, {
+    [chosenPost.post.postDataId]: clone
+  });
 }

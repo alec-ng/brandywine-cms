@@ -4,7 +4,7 @@ import { closeModal } from '../../state/actions';
 import { selectPendingStatus } from '../../state/selectors';
 import { 
   CREATE_POST, DELETE_POST, PUBLISH_CURRENT_POST, UNPUBLISH_CURRENT_POST, SAVE_CURRENT_POST 
-} from '../../state/actions/data-actions';
+} from '../../state/actions/async-actions';
 
 import CreatePostModal from '../stateless/global/modals/create-post';
 import DeletePostModal from '../stateless/global/modals/delete-post';
@@ -28,14 +28,19 @@ const modalMap = {
  * and passes any props if supplied.
  * Only supports one modal shown at a time
  */
-function ModalManager({modalToShow, modalPayload, pendingFlags, dispatch}) {
+function ModalManager({
+  modalToShow, 
+  modalPayload, 
+  pendingFlags, 
+  dispatch
+}) {
   const onClose = () => { dispatch(closeModal()); }
   const modalList = Object.keys(modalMap).map(modalKey => {
     let modalProps = {
-      onClose: onClose,
-      open: modalKey === modalToShow,
       key: modalKey,
-      locked: pendingFlags[modalKey] || false
+      open: modalKey === modalToShow,
+      locked: pendingFlags[modalKey] || false,
+      onClose: onClose
     };
     if (modalProps.open) {
       modalProps = {...modalProps, ...modalPayload};

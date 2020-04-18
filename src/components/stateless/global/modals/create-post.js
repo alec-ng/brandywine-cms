@@ -1,48 +1,67 @@
-import React, { useState, useRef } from "react";
-import { validateNewPost } from '../../../../util/post-validation';
-import Modal from "../../universal/modal";
-import Spinner from "../../universal/spinner";
-import NewPostForm from '../forms/post-form-composer';
+import React, { useState, useRef, useEffect } from "react";
+import { baseMdFactory } from '../../../../types/post-metadata';
+import Util from '../../../../modules/util';
+import Slug from '../../../../modules/slug';
+
+import Modal from "../../generic/modal";
+import Spinner from "../../generic/spinner";
+import BaseMetadataForm, {strFieldList} from '../forms/base-post-metadata';
 
 /*
  * Renders a button that opens up a modal to create a new post
  */
-export default function CreatePostModal(
-  {open, onClose, onSubmit, groupingDataSlice, postGroup, locked}
-) {  
+export default function CreatePostModal({
+  open, 
+  onClose, 
+  onSubmit, 
+  cmsPosts, 
+  locked
+}) {  
   const [validationErrors, setValidationErrors] = useState([]);
+  const [baseMetadata, setBaseMetadata] = useState(baseMdFactory());
   const formRef = useRef();
 
-  /**
-   * Validates the current HTML form and runs standard validation for non-published posts
-   * If successful, call onSubmit cb
-   */
+  // reset form values on close, synchronizing timing with fade
+  useEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        setBaseMetadata(baseMdFactory());
+        setValidationErrors([]);
+      }, 300);
+    }
+  }, [open]);
+
+  // controlled form 
+  function onInputChange(e) {
+    setBaseMetadata(Object.assign({}, baseMetadata, {
+      [e.target.name] : e.target.value
+    }));
+  }
+
+  // Validates form values and on success, fires onSubmit cb
+  // assumes onSubmit will close the modal, resetting the form
   function validateAndCreate() {
     if (!formRef.current.reportValidity()) {
-        return;
+      return;
     }
-    const inputs = formRef.current.querySelectorAll('input')
-    let newPostValues = {};
-    inputs.forEach(input => {
-      if (input.dataset.val && input.value) {
-        newPostValues[input.dataset.val] = input.value;
-      }
-    });
 
-    let validationErrors = [];
-    validationErrors.push(
-      ...validateNewPost(newPostValues.title, newPostValues.date, groupingDataSlice)
-    );
-    setValidationErrors(validationErrors);
-    
-    if (validationErrors.length === 0) {
-      onSubmit(newPostValues);
+    const errs = Util.validateEmptyObject(baseMetadata, strFieldList);
+    if (errs.length) {
+      setValidationErrors(errs);
+      return;
     }
+    if (!Slug.validateUnique(baseMetadata, cmsPosts)) {
+      setValidationErrors([Slug.ERR_SLUG_NON_UNIQUE]);
+      return;
+    }
+
+    onSubmit(baseMetadata);
   }
 
   return (
     <div>
       <Modal open={open} handleClose={onClose} locked={locked}>
+
         <h2>Create a new post</h2>
         <p>
           Enter a unique title and date combination.
@@ -50,11 +69,11 @@ export default function CreatePostModal(
           Titles can only be alphanumeric with spaces.
         </p>
         
-        <form ref={formRef}>
-          <fieldset disabled={locked}>
-            <NewPostForm 
-              grouping={postGroup}
-              showReadOnly={false}
+        <fieldset disabled={locked}>  
+          <form ref={formRef}>
+            <BaseMetadataForm
+              onChange={onInputChange}
+              values={baseMetadata}
             />
             {validationErrors.length > 0 && (
               <div className="text-center mb-4" style={{ color: "red" }}>
@@ -63,11 +82,9 @@ export default function CreatePostModal(
                 )}
               </div>
             )}      
-          </fieldset>
-        </form>
+          </form>
         
-        <div className="text-right">
-          <fieldset disabled={locked}>
+          <div className="text-right">
             <button
               type="button"
               onClick={onClose}
@@ -82,8 +99,8 @@ export default function CreatePostModal(
               {locked && <Spinner />}
               Create
             </button>
-          </fieldset>
-        </div>
+          </div>
+        </fieldset>
 
       </Modal>
     </div>
