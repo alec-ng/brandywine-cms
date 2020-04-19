@@ -1,23 +1,23 @@
 import Slug from "../modules/slug";
-import Util from '../modules/util';
+import Util from "../modules/util";
 
 /**
  * All post data not related to the actual content
  */
 export default class PostMetadata {
   // Base metadata
-  title = ''; // string;
-  date = ''; // string;
-  grouping = ''; // string; 
-  
+  title = ""; // string;
+  date = ""; // string;
+  grouping = ""; // string;
+
   // Location metadata
-  area = ''; // ?string
-  region = ''; // ?string;
-  lat = ''; // ?number;
-  lng = ''; // ?number;
+  area = ""; // ?string
+  region = ""; // ?string;
+  lat = ""; // ?number;
+  lng = ""; // ?number;
 
   // Publish metadata
-  isPublished = false; // boolean 
+  isPublished = false; // boolean
   postDataId = null; // ?string;
 
   // unique key for url id
@@ -36,10 +36,6 @@ export default class PostMetadata {
   // gets typecasted metadata properties of this instance
   get publishedSubset() {
     let obj = Object.assign({}, this.typedcastedSelf);
-    // HOTFIX: safeguard against saving deprecated "key" field
-    if (obj.key) {
-      delete obj.key;
-    }
     delete obj.isPublished;
     return obj;
   }
@@ -79,36 +75,30 @@ export default class PostMetadata {
 
     return Util.validateEmptyObject(baseFields, baseStrFields);
   }
-
 }
 
 // ---------------- UTIL
 
 const stringFields = [
-  'title',
-  'date',
-  'grouping',
-  'area',
-  'region',
-  'postDataId'
+  "title",
+  "date",
+  "grouping",
+  "area",
+  "region",
+  "postDataId"
 ];
 
-const locationMdFields = [
-  'region',
-  'area',
-  'lat',
-  'lng'
-];
+const locationMdFields = ["region", "area", "lat", "lng"];
 
 export const baseMdFactory = () => ({
-  title: '',
-  date: '',
-  grouping: ''
-})
+  title: "",
+  date: "",
+  grouping: ""
+});
 
 export const locationMdFactory = () => ({
-  area: '',
-  region: '',
-  lat: '',
-  lng: ''
+  area: "",
+  region: "",
+  lat: "",
+  lng: ""
 });

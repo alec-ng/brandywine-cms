@@ -1,16 +1,16 @@
-import moment from 'moment';
-import { trimFulfilledAction } from './index';
-import CMSPost from '../../types/cms-post';
+import moment from "moment";
+import { trimFulfilledAction } from "./index";
+import CMSPost from "../../types/cms-post";
 import {
   CREATE_POST,
   DELETE_POST,
   SAVE_CURRENT_POST,
   PUBLISH_CURRENT_POST,
   UNPUBLISH_CURRENT_POST,
-  GET_ALL_POSTS,
-} from '../actions/async-actions';
+  GET_ALL_POSTS
+} from "../actions/async-actions";
 
-export default function dataReducer({data = {}, chosenPost}, action) {
+export default function dataReducer({ data = {}, chosenPost }, action) {
   const baseAction = Object.assign({}, action, {
     type: trimFulfilledAction(action.type)
   });
@@ -36,15 +36,14 @@ export default function dataReducer({data = {}, chosenPost}, action) {
 
     // convert obj data to CMSPost instances
     case GET_ALL_POSTS:
-      return Object.keys(action.payload).reduce((data, postId) => {
-        // HOTFIX: retroactively populate postDataId field on metadata
-        let cmsPost = CMSPost.fromObject(action.payload[postId])
-        cmsPost.post.postDataId = postId;
-        return Object.assign({}, data, {
-          [postId]: cmsPost
-        });
-      }, {});
-    
+      return Object.keys(action.payload).reduce(
+        (data, postId) =>
+          Object.assign({}, data, {
+            [postId]: CMSPost.fromObject(action.payload[postId])
+          }),
+        {}
+      );
+
     default:
       return data;
   }
@@ -53,13 +52,13 @@ export default function dataReducer({data = {}, chosenPost}, action) {
 function updatePost(data, chosenPost, action) {
   let clone = CMSPost.fromSelf(chosenPost);
   clone.lastModified = moment();
-  
+
   if (action.type === UNPUBLISH_CURRENT_POST) {
     clone.post.isPublished = false;
-  } 
+  }
   if (action.type === PUBLISH_CURRENT_POST) {
     clone.post.isPublished = true;
-  } 
+  }
 
   return Object.assign({}, data, {
     [chosenPost.post.postDataId]: clone
