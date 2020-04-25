@@ -95,7 +95,7 @@ b {
  *  Brandywine styling used in blog
  */
 #global-editor-container .brandywine-responsive-caption {
-  color: rgb(0, 0, 0);
+  color: rgba(0, 0, 0, 0.7);
 }
 #global-editor-container strong {
   font-weight: 700;
