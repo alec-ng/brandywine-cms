@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import { BrandywineEditor } from "react-brandywine-editor/lib/edit-mode/index";
 import Image from "react-brandywine-editor/lib/plugins/image/";
@@ -10,12 +10,12 @@ import EmbeddedVideo from "react-brandywine-editor/lib/plugins/embedded-video/";
 import HTMLVideo from "react-brandywine-editor/lib/plugins/html-video/";
 
 const plugins = [
-  Image, 
-  Markdown, 
-  CoverPhoto, 
-  Spacer, 
-  Carousel, 
-  HTMLVideo, 
+  Image,
+  Markdown,
+  CoverPhoto,
+  Spacer,
+  Carousel,
+  HTMLVideo,
   EmbeddedVideo
 ];
 
@@ -23,9 +23,9 @@ const plugins = [
  * Renders a brandywine editor, and only rerenders if the postKey changes
  * (postData is loaded initially and doesn't need to be synced)
  */
-function Editor({postKey, postData, onChange}) {
+function Editor({ postKey, postData, onChange }) {
   return (
-    <div className="mx-5">
+    <div id="global-editor-container" className="mx-5">
       <BrandywineEditor
         showPluginDescription={false}
         plugins={plugins}
